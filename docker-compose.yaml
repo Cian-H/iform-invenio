@@ -20,7 +20,7 @@ services:
     networks:
       - am-d-model-network
     ports:
-      - "8080:8080"
+      - "8080:80"
     volumes:
       - caddy_data:/data
       - caddy_config:/config
