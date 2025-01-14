@@ -8,16 +8,19 @@ services:
   site:
     build: .
     networks:
-      - host
       - am-d-model-network
+    expose:
+      - "3000"
     restart: unless-stopped
 
   caddy:
     image: caddy:latest
+    depends_on:
+        - site
     networks:
       - am-d-model-network
     ports:
-      - "3000:80"
+      - "8080:8080"
     volumes:
       - caddy_data:/data
       - caddy_config:/config
@@ -25,13 +28,6 @@ services:
       sh -c "wget -O /etc/caddy/Caddyfile https://raw.githubusercontent.com/Cian-H/am-d-model.eu/refs/heads/main/conf/Caddyfile &&
       caddy run --config /etc/caddy/Caddyfile"
     restart: unless-stopped
-
-  # watchtower:
-  #   image: containrrr/watchtower
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   command: --interval 30 --cleanup
-  #   restart: unless-stopped
 
 volumes:
   caddy_data:
