@@ -23,7 +23,7 @@ services:
     networks:
       - am-d-model-network
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - ./caddy:/etc/caddy
     restart: unless-stopped
