@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
 version: "3.8"
 
 networks:
@@ -12,6 +13,8 @@ services:
     expose:
       - "3000"
     restart: unless-stopped
+    labels:
+      - "io.containers.autoupdate=local"
 
   caddy:
     image: docker.io/library/caddy:latest
@@ -22,13 +25,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - caddy_data:/data
-      - caddy_config:/config
       - ./caddy:/etc/caddy
     restart: unless-stopped
     labels:
       - "io.containers.autoupdate=registry"
-
-volumes:
-  caddy_data:
-  caddy_config:
