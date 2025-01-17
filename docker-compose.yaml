@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
 
   caddy:
-    image: caddy:latest
+    image: docker.io/library/caddy:latest
     depends_on:
         - site
     networks:
@@ -24,10 +24,10 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
-    command: >
-      sh -c "wget -O /etc/caddy/Caddyfile https://raw.githubusercontent.com/Cian-H/am-d-model.eu/refs/heads/main/conf/Caddyfile &&
-      caddy run --config /etc/caddy/Caddyfile"
+      - ./caddy:/etc/caddy
     restart: unless-stopped
+    labels:
+      - "io.containers.autoupdate=registry"
 
 volumes:
   caddy_data:
