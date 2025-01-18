@@ -24,6 +24,7 @@ services:
       - am-d-model-network
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./caddy:/etc/caddy
     restart: unless-stopped
