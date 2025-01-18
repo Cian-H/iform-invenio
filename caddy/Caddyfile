@@ -15,6 +15,10 @@
     import site
 }
 
+http://am-d-model.eu {
+    import site
+}
+
 am-d-model.eu {
     tls internal
     import site
