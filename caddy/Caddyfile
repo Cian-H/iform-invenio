@@ -20,6 +20,5 @@ http://am-d-model.eu {
 }
 
 am-d-model.eu {
-    tls internal
     import site
 }
