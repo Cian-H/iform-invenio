@@ -10,8 +10,10 @@
         health_status 200
     }
 
-    handle /repo {
-        rewrite * /repo/placeholder.html
+    handle /repo/* {
+        root * /var/www/html
+        try_files * /repo/placeholder.html
+        file_server
     }
 }
 
