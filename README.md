@@ -17,20 +17,39 @@ cd am-d-model.eu
 ```
 
 2. Start the development server:
-```bash
-bun dev
-```
+    - via bun (recommended)
+    ```bash
+    bun install
+    bun run dev
+    ```
+    - via node.js
+    ```bash
+    npm install
+    npm run dev
+    ```
+    - via deno
+    ```bash
+    deno install --allow-scripts=npm:svelte-preprocess,npm:@parcel/watcher
+    deno run dev
+    ```
+    - via docker
+    ```bash
+    docker build --tag am-d-model-site:latest .
+    docker run -p 3000:3000 am-d-model-site
+    ```
 
-The site will be available at `http://localhost:5173`
+The site will be available at `http://localhost:3000`
 
 ### Other Commands
 
 - `bun preview`: Run a preview of the production build
 - `bun build`: Build the site for production
+- `docker compose up`: Deploys a docker composition including a caddy reverse proxy, ready to be deployed to web infrastructure
 
 ## Deployment
 
-The website is automatically deployed via GitHub Actions when changes are pushed to the main branch. The production site can be found at `https://am-d-model.eu`
+For simplicity, deployment is manually triggered via justfiles. More complex solutions may be
+implemented in future but for now, simplicity is a virtue.
 
 ## License
 
