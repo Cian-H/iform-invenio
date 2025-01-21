@@ -10,9 +10,8 @@
         health_status 200
     }
 
-    route /repo {
-        root * /repo/placeholder.html
-        file_server
+    handle /repo {
+        rewrite * /repo/placeholder.html
     }
 }
 
