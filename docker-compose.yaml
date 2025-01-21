@@ -28,6 +28,7 @@ services:
     volumes:
       - caddy_data:/data
       - ./caddy:/etc/caddy
+      - ./repo:/repo
     restart: unless-stopped
     labels:
       - "io.containers.autoupdate=registry"

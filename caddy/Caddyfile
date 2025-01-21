@@ -9,6 +9,11 @@
         health_timeout 10s
         health_status 200
     }
+
+    route /repo {
+        root * /repo/placeholder.html
+        file_server
+    }
 }
 
 :80 {
