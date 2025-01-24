@@ -11,6 +11,7 @@
     }
 
     route /repo/* {
+        uri strip_prefix /repo
         reverse_proxy repo-placeholder:80
     }
 }
