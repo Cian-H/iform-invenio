@@ -11,6 +11,7 @@ This project uses `devenv.nix` to manage the development environment, which will
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/Cian-H/am-d-model.eu.git
 cd am-d-model.eu
@@ -54,4 +55,3 @@ implemented in future but for now, simplicity is a virtue.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
