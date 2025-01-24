@@ -4,15 +4,16 @@
 }
 
 (site) {
-    @cachedFiles {
-      path *.webp *.webm *.ico *.js *.css
-    }
-    header @cachedFiles Cache-Control "public, max-age=1814400, must-revalidate"
-
     @landing {
         path / /contact* /about*
+        cache {
+          ttl 86400s
+        }
     }
     handle /_app/* {
+        cache {
+          ttl 86400s
+        }
         reverse_proxy site:3000
     }
     handle @landing {
@@ -24,6 +25,9 @@
         }
     }
     handle /repo* {
+        cache {
+          ttl 86400s
+        }
         uri strip_prefix /repo
         reverse_proxy repo-placeholder:80
     }
