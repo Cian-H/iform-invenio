@@ -3,9 +3,10 @@
 }
 
 (site) {
-    route /repo/* {
-        uri strip_prefix /repo
-        reverse_proxy repo-placeholder:80
+    log {
+        output stderr
+        format console
+        level DEBUG
     }
 
     reverse_proxy /* site:3000 {
@@ -13,6 +14,11 @@
         health_interval 30s
         health_timeout 10s
         health_status 200
+    }
+
+    route /repo/* {
+        uri strip_prefix /repo
+        reverse_proxy repo-placeholder:80
     }
 }
 
