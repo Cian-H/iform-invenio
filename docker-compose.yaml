@@ -22,10 +22,18 @@ services:
     volumes:
       - caddy_data:/data
       - ./caddy:/etc/caddy
-      - ./var/www/html/repo:/repo
     restart: unless-stopped
     labels:
       - "io.containers.autoupdate=registry"
+
+  repo-placeholder:
+    image: docker.io/nginx:alpine
+    networks:
+      - am-d-model-network
+    expose:
+      - "80"
+    volumes:
+      - ./repo:/usr/share/nginx/html
 
 networks:
   am-d-model-network:
