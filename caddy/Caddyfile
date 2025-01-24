@@ -4,7 +4,7 @@
 
 (site) {
     @landing {
-        path / /contact* /about*
+        path / /contact* /about* /favicon.png
     }
     handle /_app/* {
         reverse_proxy site:3000
