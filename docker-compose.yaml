@@ -9,6 +9,8 @@ services:
     restart: unless-stopped
     labels:
       - "io.containers.autoupdate=local"
+    volumes:
+      - ./logs:/logs
 
   caddy:
     image: docker.io/library/caddy:latest
@@ -34,7 +36,6 @@ services:
       - "80"
     volumes:
       - ./repo:/usr/share/nginx/html
-      - ./logs:./logs
 
 networks:
   am-d-model-network:
