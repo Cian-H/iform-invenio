@@ -12,6 +12,9 @@
     @landing {
         path / /contact* /about*
     }
+    handle /_app/* {
+        reverse_proxy site:3000
+    }
     handle @landing {
         reverse_proxy site:3000 {
             health_uri /health
