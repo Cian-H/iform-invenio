@@ -9,8 +9,6 @@ services:
     restart: unless-stopped
     labels:
       - "io.containers.autoupdate=local"
-    volumes:
-      - ./logs:/logs
 
   caddy:
     image: docker.io/library/caddy:latest
