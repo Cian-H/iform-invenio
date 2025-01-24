@@ -17,13 +17,16 @@
 }
 
 :80 {
+    header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
     import site
 }
 
 http://am-d-model.eu {
+    header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
     import site
 }
 
 am-d-model.eu {
+    header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
     import site
 }
