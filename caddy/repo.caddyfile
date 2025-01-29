@@ -24,8 +24,8 @@
 
     # UI Server routes
     handle / {
-        limits {
-            request_body 100mb
+        request_body {
+            max_size 100MB
         }
         reverse_proxy repo-web-ui:5000 {
             import repo_common_proxy
@@ -34,8 +34,8 @@
 
     # API routes
     handle /api/* {
-        limits {
-            request_body 100mb
+        request_body {
+            max_size 100MB
         }
         reverse_proxy repo-web-api:5000 {
             import repo_common_proxy
@@ -44,8 +44,8 @@
 
     # Large file upload API routes
     handle_path /api/records/*/draft/files/*/content {
-        limits {
-            request_body 250gb
+        request_body {
+            max_size 250GB
         }
         reverse_proxy repo-web-api:5000 {
             import repo_common_proxy
