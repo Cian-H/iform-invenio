@@ -27,7 +27,7 @@
 		request_body {
 			max_size 100MB
 		}
-		reverse_proxy repo-web-ui:5000 {
+		reverse_proxy repo-web-ui:33385 {
 			import repo_common_proxy
 		}
 	}
@@ -37,7 +37,7 @@
 		request_body {
 			max_size 100MB
 		}
-		reverse_proxy repo-web-api:5000 {
+		reverse_proxy repo-web-api:33387 {
 			import repo_common_proxy
 		}
 	}
@@ -48,7 +48,7 @@
 			max_size 250GB
 		}
 		encode gzip
-		reverse_proxy repo-web-api:5000 {
+		reverse_proxy repo-web-api:33387 {
 			import repo_common_proxy
 		}
 	}
