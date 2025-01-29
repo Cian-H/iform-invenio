@@ -13,8 +13,6 @@
 (repo_common_proxy) {
     # Set headers similar to uwsgi_param
     header_up Host {host}
-    header_up X-Forwarded-For {remote_host}
-    header_up X-Forwarded-Proto {scheme}
     header_up X-Request-ID {uuid}
     # Remove sensitive headers
     header_down -X-Session-ID
@@ -26,25 +24,25 @@
 
     # UI Server routes
     handle / {
+        body_size_limit 100mb
         reverse_proxy repo-web-ui:5000 {
             import repo_common_proxy
-            max_upload_size 100mb
         }
     }
 
     # API routes
     handle /api/* {
+        body_size_limit 100mb
         reverse_proxy repo-web-api:5000 {
             import repo_common_proxy
-            max_upload_size 100mb
         }
     }
 
     # Large file upload API routes
     handle_path /api/records/*/draft/files/*/content {
+        body_size_limit 250gb
         reverse_proxy repo-web-api:5000 {
             import repo_common_proxy
-            max_upload_size 250gb
             encode gzip
         }
     }
