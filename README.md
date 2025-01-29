@@ -1,29 +1,24 @@
 # AM-D-Model Data Repository
 
-Welcome to your InvenioRDM instance.
+Welcome to the modified InvenioRDM instance for the AM-D-Model data repository.
+This instance has been modified specifically for production ready, containerized
+deployment in an amazon AWS EC2 instance behind a reverse proxy. This allows it
+to be incorporated as part of a larger research project's website.
 
 ## Getting started
 
-Run the following commands in order to start your new InvenioRDM instance:
+Run the following commands in order to start the InvenioRDM instance:
 
 ```console
-invenio-cli containers start --lock --build --setup
+invenio-cli containers build
+./prepare-env.sh
+docker compose -f docker-compose.full.yml up -d
+rm .env # Cleanup for security reasons
 ```
-
-The above command first builds the application docker image and afterwards
-starts the application and related services (database, Opensearch, Redis
-and RabbitMQ). The build and boot process will take some time to complete,
-especially the first time as docker images have to be downloaded during the
-process.
-
-Once running, visit https://127.0.0.1 in your browser.
-
-**Note**: The server is using a self-signed SSL certificate, so your browser
-will issue a warning that you will have to by-pass.
 
 ## Overview
 
-Following is an overview of the generated files and folders:
+Following is an overview of the files and folders in this instance:
 
 | Name | Description |
 |---|---|
@@ -38,6 +33,7 @@ Following is an overview of the generated files and folders:
 | ``docker-services.yml`` | Common services for the Docker Compose files. |
 | ``invenio.cfg`` | The Invenio application configuration. |
 | ``logs`` | Log files. |
+| ``prepare_env.sh`` | Creation of a .env file containing required secrets from AWS |
 | ``static`` | Static files that need to be served as-is (e.g. images). |
 | ``templates`` | Folder for your Jinja templates. |
 | ``.invenio`` | Common file used by Invenio-CLI to be version controlled. |
