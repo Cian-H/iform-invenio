@@ -23,7 +23,7 @@ services:
         volumes:
             - caddy_data:/data
             - ./caddy:/etc/caddy
-            - repo_static_data:/opt/invenio/var/instance/static
+            - static_data:/opt/invenio/var/instance/static
         restart: unless-stopped
         labels:
             - "io.containers.autoupdate=registry"
@@ -85,3 +85,4 @@ networks:
 
 volumes:
     caddy_data:
+    static_data:
