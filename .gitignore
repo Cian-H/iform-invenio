@@ -74,5 +74,5 @@ data/.minio.sys
 # Celery
 celerybeat-schedule
 
-# Configuration secrets
-secrets.toml
+# Configuration environment
+.env
