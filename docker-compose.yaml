@@ -61,21 +61,21 @@ services:
     repo-web-ui:
       extends:
         file: repo/docker-compose.full.yml
-        service: app
+        service: web-ui
       networks:
         - am-d-model-network
     # API Rest Application
     repo-web-api:
       extends:
         file: repo/docker-compose.full.yml
-        service: app
+        service: web-api
       networks:
         - am-d-model-network
     # Worker
     repo-worker:
       extends:
         file: repo/docker-compose.full.yml
-        service: app
+        service: worker
       networks:
         - am-d-model-network
 
