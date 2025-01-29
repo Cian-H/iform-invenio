@@ -86,3 +86,4 @@ networks:
 volumes:
     caddy_data:
     static_data:
+    redis_data:
