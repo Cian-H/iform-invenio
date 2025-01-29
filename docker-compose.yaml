@@ -29,74 +29,53 @@ services:
             - "io.containers.autoupdate=registry"
     repo-cache:
         extends:
-          file: repo/docker-services.yml
+          file: repo/docker-compose.full.yml
           service: cache
         networks:
           - am-d-model-network
     repo-db:
         extends:
-          file: repo/docker-services.yml
+          file: repo/docker-compose.full.yml
           service: db
         networks:
           - am-d-model-network
     repo-mq:
         extends:
-          file: repo/docker-services.yml
+          file: repo/docker-compose.full.yml
           service: mq
         networks:
           - am-d-model-network
     repo-search:
         extends:
-          file: repo/docker-services.yml
+          file: repo/docker-compose.full.yml
           service: search
         networks:
           - am-d-model-network
     repo-s3:
       extends:
-        file: repo/docker-services.yml
+        file: repo/docker-compose.full.yml
         service: s3
       networks:
         - am-d-model-network
     # UI Application
     repo-web-ui:
       extends:
-        file: repo/docker-services.yml
+        file: repo/docker-compose.full.yml
         service: app
-      command: ["uwsgi /opt/invenio/var/instance/uwsgi_ui.ini"]
-      image: am-d-model-data-repository:latest
-      ports:
-        - "5000"
-      volumes:
-        - repo_static_data:/opt/invenio/var/instance/static
       networks:
         - am-d-model-network
     # API Rest Application
     repo-web-api:
       extends:
-        file: repo/docker-services.yml
+        file: repo/docker-compose.full.yml
         service: app
-      command: ["uwsgi /opt/invenio/var/instance/uwsgi_rest.ini"]
-      image: am-d-model-data-repository:latest
-      ports:
-        - "5000"
       networks:
         - am-d-model-network
     # Worker
     repo-worker:
       extends:
-        file: repo/docker-services.yml
+        file: repo/docker-compose.full.yml
         service: app
-      command: ["celery -A invenio_app.celery worker --beat --loglevel=INFO"]
-      image: am-d-model-data-repository:latest
-      depends_on:
-        repo-search:
-          condition: service_started
-        repo-cache:
-          condition: service_started
-        repo-db:
-          condition: service_started
-        repo-mq:
-          condition: service_started
       networks:
         - am-d-model-network
 
@@ -106,4 +85,3 @@ networks:
 
 volumes:
     caddy_data:
-    repo_static_data:
