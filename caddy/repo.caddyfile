@@ -11,8 +11,6 @@
 }
 
 (repo_common_proxy) {
-    # Equivalent to proxy_request_buffering off
-    request_body_read_buffer_size 100mb
     # Set headers similar to uwsgi_param
     header_up Host {host}
     header_up X-Forwarded-For {remote_host}
@@ -30,8 +28,7 @@
     handle / {
         reverse_proxy repo-web-ui:5000 {
             import repo_common_proxy
-            # Default max upload size 100MB
-            request_body_max_size 100mb
+            max_upload_size 100mb
         }
     }
 
@@ -39,8 +36,7 @@
     handle /api/* {
         reverse_proxy repo-web-api:5000 {
             import repo_common_proxy
-            # Default max upload size 100MB
-            request_body_max_size 100mb
+            max_upload_size 100mb
         }
     }
 
@@ -48,8 +44,7 @@
     handle_path /api/records/*/draft/files/*/content {
         reverse_proxy repo-web-api:5000 {
             import repo_common_proxy
-            # Max upload size 50GB
-            request_body_max_size 50gb
+            max_upload_size 250gb
             encode gzip
         }
     }
