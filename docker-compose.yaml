@@ -29,61 +29,61 @@ services:
             - "io.containers.autoupdate=registry"
     repo-cache:
         extends:
-          file: repo/docker-compose.full.yml
-          service: cache
+            file: repo/docker-compose.full.yml
+            service: cache
         networks:
-          - am-d-model-network
+            - am-d-model-network
     repo-db:
         extends:
-          file: repo/docker-compose.full.yml
-          service: db
+            file: repo/docker-compose.full.yml
+            service: db
         networks:
-          - am-d-model-network
+            - am-d-model-network
     repo-mq:
         extends:
-          file: repo/docker-compose.full.yml
-          service: mq
+            file: repo/docker-compose.full.yml
+            service: mq
         networks:
-          - am-d-model-network
+            - am-d-model-network
     repo-search:
         extends:
-          file: repo/docker-compose.full.yml
-          service: search
+            file: repo/docker-compose.full.yml
+            service: search
         networks:
-          - am-d-model-network
+            - am-d-model-network
     repo-s3:
-      extends:
-        file: repo/docker-compose.full.yml
-        service: s3
-      networks:
-        - am-d-model-network
+        extends:
+            file: repo/docker-compose.full.yml
+            service: s3
+        networks:
+            - am-d-model-network
     # UI Application
     repo-web-ui:
-      extends:
-        file: repo/docker-compose.full.yml
-        service: web-ui
-      build:
-        context: ./repo/
-      networks:
-        - am-d-model-network
+        extends:
+            file: repo/docker-compose.full.yml
+            service: web-ui
+        build:
+            context: ./repo/
+        networks:
+            - am-d-model-network
     # API Rest Application
     repo-web-api:
-      extends:
-        file: repo/docker-compose.full.yml
-        service: web-api
-      build:
-        context: ./repo/
-      networks:
-        - am-d-model-network
+        extends:
+            file: repo/docker-compose.full.yml
+            service: web-api
+        build:
+            context: ./repo/
+        networks:
+            - am-d-model-network
     # Worker
     repo-worker:
-      extends:
-        file: repo/docker-compose.full.yml
-        service: worker
-      build:
-        context: ./repo/
-      networks:
-        - am-d-model-network
+        extends:
+            file: repo/docker-compose.full.yml
+            service: worker
+        build:
+            context: ./repo/
+        networks:
+            - am-d-model-network
 
 networks:
     am-d-model-network:
