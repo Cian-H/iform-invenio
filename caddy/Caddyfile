@@ -1,38 +1,36 @@
-import repo.caddyfile
-
-{
-    admin off
+import repo.caddyfile {
+	admin off
 }
 
 (site) {
-    @landing {
-        path / /contact* /about* /favicon.png
-    }
-    handle /_app/* {
-        reverse_proxy site:3000
-    }
-    handle @landing {
-        reverse_proxy site:3000 {
-            health_uri /health
-            health_interval 30s
-            health_timeout 10s
-            health_status 200
-        }
-    }
-    handle /repo* {
-        uri strip_prefix /repo
-        import repo_site
-    }
+	@landing {
+		path / /contact* /about* /favicon.png
+	}
+	handle /_app/* {
+		reverse_proxy site:3000
+	}
+	handle @landing {
+		reverse_proxy site:3000 {
+			health_uri /health
+			health_interval 30s
+			health_timeout 10s
+			health_status 200
+		}
+	}
+	handle /repo* {
+		uri strip_prefix /repo
+		import repo_site
+	}
 }
 
 :80 {
-    import site
+	import site
 }
 
 http://am-d-model.eu {
-    import site
+	import site
 }
 
 am-d-model.eu {
-    import site
+	import site
 }
