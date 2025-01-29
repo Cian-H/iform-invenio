@@ -16,6 +16,7 @@ services:
             - site
         networks:
             - am-d-model-network
+            - am-d-model-repo-network
         ports:
             - "80:80"
             - "443:443"
@@ -26,18 +27,12 @@ services:
         labels:
             - "io.containers.autoupdate=registry"
 
-    repo-placeholder:
-        image: docker.io/nginx:alpine
-        networks:
-            - am-d-model-network
-        expose:
-            - "80"
-        volumes:
-            - ./repo:/usr/share/nginx/html
-
 networks:
     am-d-model-network:
         name: am-d-model-network
+    am-d-model-repo-network:
+        name: am-d-model-repo-network
+        external: true
 
 volumes:
     caddy_data:

@@ -19,7 +19,7 @@
     }
     handle /repo* {
         uri strip_prefix /repo
-        reverse_proxy repo-placeholder:80
+        reverse_proxy am-d-model-data-repository-frontend:80
     }
 }
 
