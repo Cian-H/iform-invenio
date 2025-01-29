@@ -62,6 +62,8 @@ services:
       extends:
         file: repo/docker-compose.full.yml
         service: web-ui
+      build:
+        context: ./repo/
       networks:
         - am-d-model-network
     # API Rest Application
@@ -69,6 +71,8 @@ services:
       extends:
         file: repo/docker-compose.full.yml
         service: web-api
+      build:
+        context: ./repo/
       networks:
         - am-d-model-network
     # Worker
@@ -76,6 +80,8 @@ services:
       extends:
         file: repo/docker-compose.full.yml
         service: worker
+      build:
+        context: ./repo/
       networks:
         - am-d-model-network
 
