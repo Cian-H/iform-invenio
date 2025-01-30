@@ -29,6 +29,10 @@
 		}
 		reverse_proxy repo-web-ui:5000 {
 			import repo_common_proxy
+			transport http {
+				max_response_header_size 8192
+				read_buffer 8192
+			}
 		}
 	}
 
