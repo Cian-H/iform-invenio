@@ -1,5 +1,9 @@
 import repo.caddyfile {
 	admin off
+	debug
+	log {
+		level DEBUG
+	}
 }
 
 (site) {
