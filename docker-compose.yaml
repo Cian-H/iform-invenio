@@ -117,8 +117,8 @@ services:
           condition: service_started
         cache:
           condition: service_started
-        # db:
-        #   condition: service_started
+        db:
+          condition: service_started
     worker:
       command: "celery -A invenio_app.celery worker --beat --events --loglevel=WARNING"
       networks:
