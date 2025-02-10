@@ -14,7 +14,7 @@ services:
         image: docker.io/library/caddy:latest
         depends_on:
             - site
-            - repo-web-ui
+            - invenio-rdm
         networks:
             - am-d-model-network
         ports:
