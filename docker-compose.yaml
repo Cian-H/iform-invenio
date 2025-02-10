@@ -161,13 +161,15 @@ services:
           condition: service_started
         cache:
           condition: service_started
-        # db:
-        #   condition: service_started
+        db:
+          condition: service_started
     cache:
       image: valkey/valkey:7.2.5-bookworm
       networks:
           - am-d-model-network
       restart: "unless-stopped"
+      volumes:
+        - "valkey_data:/data"
       ports:
         - "6379:6379"
     db:
@@ -179,6 +181,8 @@ services:
         - POSTGRES_USER=${POSTGRES_USER:-inveniordm}
         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-inveniordm}
         - POSTGRES_DB=${POSTGRES_DB:-inveniordm}
+      volumes:
+        - "postgres_data:/var/lib/postgresql/data"
       ports:
         - 5432:5432
     search:
@@ -212,4 +216,6 @@ volumes:
   app_data:
   uploaded_data:
   archived_data:
+  postgres_data:
+  valkey_data:
   caddy_data:
