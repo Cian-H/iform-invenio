@@ -6,8 +6,10 @@
   ...
 }: {
   packages = with pkgs; [
+    awscli2
     bun
     git
+    jq
   ];
 
   languages.javascript.bun = {
