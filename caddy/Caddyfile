@@ -1,9 +1,5 @@
 {
 	admin off
-	debug
-	log {
-		level DEBUG
-	}
 }
 
 am-d-model.eu {
