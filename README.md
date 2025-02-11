@@ -46,6 +46,7 @@ The site will be available at `http://localhost:3000`
 - `bun preview`: Run a preview of the production build
 - `bun build`: Build the site for production
 - `docker compose up`: Deploys a docker composition including a caddy reverse proxy, ready to be deployed to web infrastructure
+- `just deploy`: Deploys a full docker composition and initialises databases, for first deployment of site
 
 ## Deployment
 
@@ -55,3 +56,10 @@ implemented in future but for now, simplicity is a virtue.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgements
+
+Thanks to the extremely friendly community of the inveniosoftware discord, and in particular
+Martin Fenner and his [alternative invenio deployment](https://github.com/front-matter/invenio-rdm-starter/tree/main) using gunicorn and caddy.
+Trying to get this to work via the traditional uwsgi and nginx was a nightmare; one he had
+apparently already discovered and worked around.
