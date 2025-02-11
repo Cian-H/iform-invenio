@@ -35,9 +35,8 @@ services:
             - uploaded_data:/opt/invenio/var/instance/data
             - archived_data:/opt/invenio/var/instance/archive
             - ./invenio_assets:/opt/invenio/var/instance/static/custom_assets # Add static assets for theming
-            # Add global theming overrides
-            - ./invenio_assets/less/site/globals/site.overrides:/opt/invenio/var/instance/assets/less/site/globals/site.overrides
-            - ./invenio_assets/less/site/globals/site.variables:/opt/invenio/var/instance/assets/less/site/globals/site.variables
+            # Add theming overrides
+            - ./invenio_assets/less/site/theme/globals/site.variables:/opt/invenio/var/instance/assets/less/invenio_app_rdm/theme/globals/site.variables
         environment:
             # Flask
             - INVENIO_APP_ALLOWED_HOSTS=${INVENIO_APP_ALLOWED_HOSTS:-['0.0.0.0', 'localhost', '127.0.0.1']}
