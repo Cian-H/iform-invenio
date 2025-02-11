@@ -122,9 +122,9 @@
 @primaryLabelColor: @darkPrimaryColor;
 
 @navbarBackgroundImage: e(""); // remove background image
-@navbarBackgroundColor: indigo-950;
-@footerLightColor: teal-700;
-@footerDarkColor: indigo-950;
-@subFooterColor: slate-900;
+@navbarBackgroundColor: #090541;
+@footerLightColor: #009990;
+@footerDarkColor: #090541;
+@subFooterColor: #074799;
 @footerTextLightColor: @white;
 @footerTextDarkColor: @white;

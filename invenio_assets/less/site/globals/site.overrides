@@ -3,5 +3,5 @@
 ***********************************************/
 
 html.cover-page {
-  background-color: slate-900;
+  background-color: #090541;
 }
