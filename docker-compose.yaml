@@ -113,6 +113,9 @@ services:
 
             # Logging
             - INVENIO_LOGGING_CONSOLE_LEVEL=${INVENIO_LOGGING_CONSOLE_LEVEL:-WARNING}
+
+            # Custom invenio settings
+            - INVENIO_SECURITY_REGISTERABLE=False # Disable manual user registration
         depends_on:
             search:
                 condition: service_started
