@@ -34,6 +34,7 @@ services:
         volumes:
             - uploaded_data:/opt/invenio/var/instance/data
             - archived_data:/opt/invenio/var/instance/archive
+            - ./invenio_assets:/opt/invenio/var/instance/static/custom_assets
         environment:
             # Flask
             - INVENIO_APP_ALLOWED_HOSTS=${INVENIO_APP_ALLOWED_HOSTS:-['0.0.0.0', 'localhost', '127.0.0.1']}
