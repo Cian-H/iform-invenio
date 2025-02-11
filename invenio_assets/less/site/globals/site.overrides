@@ -1,0 +1,7 @@
+/***********************************************
+         AM-D-Model Invenio Overrides
+***********************************************/
+
+html.cover-page {
+  background-color: slate-900;
+}
