@@ -209,7 +209,7 @@ services:
                 hard: 65536
         mem_limit: 2g
         volumes:
-            - search_data:/usr/share/opensearch/data
+            - opensearch_data:/usr/share/opensearch/data
         ports:
             - "9200:9200"
             - "9600:9600"
