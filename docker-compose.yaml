@@ -208,6 +208,8 @@ services:
                 soft: 65536
                 hard: 65536
         mem_limit: 2g
+        volumes:
+            - searchdata:/usr/share/opensearch/data
         ports:
             - "9200:9200"
             - "9600:9600"
@@ -221,5 +223,6 @@ volumes:
     uploaded_data:
     archived_data:
     postgres_data:
+    opensearch_data:
     valkey_data:
     caddy_data:
