@@ -118,7 +118,7 @@ services:
             # Custom invenio settings
             - INVENIO_SECURITY_REGISTERABLE=False # Disable manual user registration
             - INVENIO_MAIL_SUPPRESS_SEND=False # Allow server to send emails
-            - RDM_DEFAULT_CITATION_STYLE = "vancouver"
+            - INVENIO_RDM_DEFAULT_CITATION_STYLE = "vancouver"
         depends_on:
             search:
                 condition: service_started
