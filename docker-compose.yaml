@@ -35,6 +35,7 @@ services:
             - uploaded_data:/opt/invenio/var/instance/data
             - archived_data:/opt/invenio/var/instance/archive
             - ./invenio_assets:/opt/invenio/var/instance/static/custom_assets # Add static assets for theming
+            - ./invenio.cfg:/opt/invenio/var/instance/invenio.cfg # Override the config with our custom one
         environment:
             # Flask
             - INVENIO_APP_ALLOWED_HOSTS=${INVENIO_APP_ALLOWED_HOSTS:-['0.0.0.0', 'localhost', '127.0.0.1']}
@@ -117,7 +118,6 @@ services:
             # Custom invenio settings
             - INVENIO_SECURITY_REGISTERABLE=False # Disable manual user registration
             - INVENIO_MAIL_SUPPRESS_SEND=False # Allow server to send emails
-            - INVENIO_OAUTHCLIENT_REMOTE_APPS="{}" # Disable OAuth clients
         depends_on:
             search:
                 condition: service_started
