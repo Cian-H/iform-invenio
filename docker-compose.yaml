@@ -107,6 +107,13 @@ services:
             - INVENIO_S3_SECRET_ACCESS_KEY=${INVENIO_S3_SECRET_ACCESS_KEY:-}
             - INVENIO_S3_BUCKET_NAME=${INVENIO_S3_BUCKET_NAME:-}
 
+            # ORCID configuration
+            - |
+              INVENIO_ORCID_APP_CREDENTIALS={
+                "consumer_key": "${INVENIO_ORCID_CLIENT_ID}",
+                "consumer_secret": "${INVENIO_ORCID_CLIENT_SECRET}"
+              }
+
             # Invenio-Search
             - INVENIO_SEARCH_HOSTS=${INVENIO_SEARCH_HOSTS:-['search:9200']}
             - INVENIO_SEARCH_INDEX_PREFIX=${INVENIO_SEARCH_INDEX_PREFIX:-invenio-rdm-}
