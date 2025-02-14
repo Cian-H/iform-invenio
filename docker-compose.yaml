@@ -37,6 +37,9 @@ services:
             - ./invenio_assets:/opt/invenio/var/instance/static/custom_assets # Add static assets for theming
             - ./invenio.cfg:/opt/invenio/var/instance/invenio.cfg # Override the config with our custom one
         environment:
+            # Production mode
+            - INVENIO_ENV=production
+
             # Flask
             - INVENIO_APP_ALLOWED_HOSTS=${INVENIO_APP_ALLOWED_HOSTS:-['0.0.0.0', 'localhost', '127.0.0.1']}
 
