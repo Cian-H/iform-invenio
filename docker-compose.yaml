@@ -117,6 +117,7 @@ services:
             # Custom invenio settings
             - INVENIO_SECURITY_REGISTERABLE=False # Disable manual user registration
             - INVENIO_MAIL_SUPPRESS_SEND=False # Allow server to send emails
+            - INVENIO_OAUTHCLIENT_REMOTE_APPS="{}" # Disable OAuth clients
         depends_on:
             search:
                 condition: service_started
