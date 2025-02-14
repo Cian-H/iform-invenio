@@ -114,6 +114,13 @@ services:
                 "consumer_secret": "${INVENIO_ORCID_CLIENT_SECRET}"
               }
 
+            # Github configuration
+            - |
+              INVENIO_GITHUB_APP_CREDENTIALS={
+                "consumer_key": "${INVENIO_GITHUB_CLIENT_ID}",
+                "consumer_secret": "${INVENIO_GITHUB_CLIENT_SECRET}"
+              }
+
             # Invenio-Search
             - INVENIO_SEARCH_HOSTS=${INVENIO_SEARCH_HOSTS:-['search:9200']}
             - INVENIO_SEARCH_INDEX_PREFIX=${INVENIO_SEARCH_INDEX_PREFIX:-invenio-rdm-}
