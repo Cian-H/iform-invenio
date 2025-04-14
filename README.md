@@ -2,6 +2,8 @@
 
 This repository contains the source code for the AM-D-Model project's public-facing website. The site serves as an info page, as well as an invitation to collaborators and portal to our other tools.
 
+![](preview.png)
+
 ## Getting Started
 
 ### Prerequisites
