@@ -1,22 +1,12 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
 services:
-    site:
-        build: .
-        networks:
-            - am-d-model-network
-        expose:
-            - "3000"
-        restart: unless-stopped
-        labels:
-            - "io.containers.autoupdate=local"
-
     caddy:
         image: docker.io/library/caddy:latest
         depends_on:
             - site
             - invenio-rdm
         networks:
-            - am-d-model-network
+            - invenio-network
         ports:
             - "80:80"
             - "443:443"
@@ -29,7 +19,7 @@ services:
     invenio-rdm:
         image: ghcr.io/front-matter/invenio-rdm-starter:v12.0.13.4
         networks:
-            - am-d-model-network
+            - invenio-network
         pull_policy: if_not_present
         volumes:
             - uploaded_data:/opt/invenio/var/instance/data
@@ -132,7 +122,7 @@ services:
     worker:
         command: "celery -A invenio_app.celery worker --beat --events --loglevel=WARNING"
         networks:
-            - am-d-model-network
+            - invenio-network
         image: ghcr.io/front-matter/invenio-rdm-starter:v12.0.13.4
         pull_policy: if_not_present
         volumes:
@@ -176,7 +166,7 @@ services:
     cache:
         image: valkey/valkey:7.2.5-bookworm
         networks:
-            - am-d-model-network
+            - invenio-network
         restart: "unless-stopped"
         volumes:
             - "valkey_data:/data"
@@ -185,7 +175,7 @@ services:
     db:
         image: postgres:16.4-bookworm
         networks:
-            - am-d-model-network
+            - invenio-network
         restart: "unless-stopped"
         environment:
             - POSTGRES_USER=${POSTGRES_USER:-inveniordm}
@@ -198,7 +188,7 @@ services:
     search:
         image: opensearchproject/opensearch:2.12.0
         networks:
-            - am-d-model-network
+            - invenio-network
         restart: "unless-stopped"
         environment:
             - bootstrap.memory_lock=true
@@ -221,8 +211,8 @@ services:
             - "9600:9600"
 
 networks:
-    am-d-model-network:
-        name: am-d-model-network
+    invenio-network:
+        name: invenio-network
 
 volumes:
     app_data:

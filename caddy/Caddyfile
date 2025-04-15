@@ -2,16 +2,7 @@
 	admin off
 }
 
-am-d-model.eu {
-	reverse_proxy site:3000 {
-		health_uri /health
-		health_interval 30s
-		health_timeout 10s
-		health_status 200
-	}
-}
-
-invenio.am-d-model.eu {
+invenio.i-form.ie {
 	root /static/* /opt/invenio/var/instance/static
 	try_files {path} {path}/ /index.html
 	reverse_proxy invenio-rdm:5000
