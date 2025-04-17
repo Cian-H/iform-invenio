@@ -3,7 +3,6 @@ services:
     caddy:
         image: docker.io/library/caddy:latest
         depends_on:
-            - site
             - invenio-rdm
         networks:
             - invenio-network
