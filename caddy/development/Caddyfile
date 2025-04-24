@@ -1,0 +1,14 @@
+{
+	debug
+	auto_https off
+	local_certs
+}
+
+localhost {
+	reverse_proxy invenio-rdm:5000
+	encode gzip
+	log {
+		format console
+		level DEBUG
+	}
+}

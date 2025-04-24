@@ -79,8 +79,8 @@ cleanup-versions:
         rm -f "versions/${tag#backup-}.txt"
     done
 
-deploy:
-    #!/usr/bin/env bash
+deploy *args:
+    ./env.sh {{args}}
     docker compose up -d --wait
     docker compose exec -it worker setup.sh
 

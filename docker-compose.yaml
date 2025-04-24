@@ -11,7 +11,7 @@ services:
             - "8443:443"
         volumes:
             - caddy_data:/data
-            - ./caddy:/etc/caddy
+            - ./caddy/${INVENIO_ENV}:/etc/caddy
         restart: unless-stopped
         labels:
             - "io.containers.autoupdate=registry"
