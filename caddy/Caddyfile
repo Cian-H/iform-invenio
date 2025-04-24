@@ -2,10 +2,7 @@
 	admin off
 }
 
-invenio.i-form.ie {
-	root /static/* /opt/invenio/var/instance/static
-	try_files {path} {path}/ /index.html
+localhost {
 	reverse_proxy invenio-rdm:5000
-	file_server
 	encode gzip
 }

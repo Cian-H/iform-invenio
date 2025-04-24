@@ -7,8 +7,8 @@ services:
         networks:
             - invenio-network
         ports:
-            - "80:80"
-            - "443:443"
+            - "8080:80"
+            - "8443:443"
         volumes:
             - caddy_data:/data
             - ./caddy:/etc/caddy
@@ -16,19 +16,17 @@ services:
         labels:
             - "io.containers.autoupdate=registry"
     invenio-rdm:
-        image: ghcr.io/front-matter/invenio-rdm-starter:v12.0.13.4
+        image: ghcr.io/front-matter/invenio-rdm-starter:latest
         networks:
             - invenio-network
-        pull_policy: if_not_present
+        ports:
+            - "5000:5000"
         volumes:
             - uploaded_data:/opt/invenio/var/instance/data
             - archived_data:/opt/invenio/var/instance/archive
             - ./invenio_assets:/opt/invenio/var/instance/static/custom_assets # Add static assets for theming
             - ./invenio.cfg:/opt/invenio/var/instance/invenio.cfg # Override the config with our custom one
         environment:
-            # Production mode
-            - INVENIO_ENV=production
-
             # Flask
             - INVENIO_APP_ALLOWED_HOSTS=${INVENIO_APP_ALLOWED_HOSTS:-['0.0.0.0', 'localhost', '127.0.0.1']}
 
@@ -122,8 +120,7 @@ services:
         command: "celery -A invenio_app.celery worker --beat --events --loglevel=WARNING"
         networks:
             - invenio-network
-        image: ghcr.io/front-matter/invenio-rdm-starter:v12.0.13.4
-        pull_policy: if_not_present
+        image: ghcr.io/front-matter/invenio-rdm-starter:latest
         volumes:
             - uploaded_data:/opt/invenio/var/instance/data
         environment:
@@ -211,7 +208,6 @@ services:
 
 networks:
     invenio-network:
-        name: invenio-network
 
 volumes:
     app_data:
