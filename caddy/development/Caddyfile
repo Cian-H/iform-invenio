@@ -1,7 +1,5 @@
 {
 	debug
-	auto_https off
-	local_certs
 }
 
 localhost {
