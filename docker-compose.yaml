@@ -16,7 +16,8 @@ services:
         labels:
             - "io.containers.autoupdate=registry"
     invenio-rdm:
-        image: ghcr.io/front-matter/invenio-rdm-starter:latest
+        build:
+            context: .
         networks:
             - invenio-network
         ports:
