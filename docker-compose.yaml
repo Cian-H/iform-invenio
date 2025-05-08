@@ -20,8 +20,6 @@ services:
             context: .
         networks:
             - invenio-network
-        ports:
-            - "5000:5000"
         volumes:
             - uploaded_data:/opt/invenio/var/instance/data
             - archived_data:/opt/invenio/var/instance/archive
