@@ -116,6 +116,7 @@ services:
             db:
                 condition: service_started
     worker:
+        command: "celery -A invenio_app.celery worker --beat --events --loglevel=WARNING"
         build:
             context: .
         networks:
