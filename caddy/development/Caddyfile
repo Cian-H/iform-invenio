@@ -3,7 +3,11 @@
 }
 
 localhost {
-	reverse_proxy invenio-rdm:5000
+	reverse_proxy invenio-rdm:5000 {
+		header_down Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+		header_down Pragma "no-cache"
+		header_down Expires "0"
+	}
 	encode gzip
 	log {
 		format console
