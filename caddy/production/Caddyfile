@@ -3,6 +3,11 @@
 }
 
 invenio.i-form.ie {
+    handle /static/* {
+        root * /var/www/
+        file_server
+    }
+
 	reverse_proxy invenio-rdm:5000
 	encode gzip
 }

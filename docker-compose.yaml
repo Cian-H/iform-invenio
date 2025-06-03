@@ -12,6 +12,7 @@ services:
         volumes:
             - caddy_data:/data
             - ./caddy/${INVENIO_ENV}:/etc/caddy
+            - site_data:/var/www:ro
         restart: unless-stopped
         labels:
             - "io.containers.autoupdate=registry"
