@@ -3,7 +3,7 @@
 }
 
 invenio.i-form.ie {
-    handle /static/* {
+    handle_path /static/* {
         root * /var/www/
         file_server
     }

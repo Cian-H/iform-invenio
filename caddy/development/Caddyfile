@@ -3,8 +3,8 @@
 }
 
 localhost {
-    handle /static/* {
-        root * /var/www/static/
+    handle_path /static* {
+        root * /var/www/static
         file_server
     }
 
@@ -13,7 +13,9 @@ localhost {
 		header_down Pragma "no-cache"
 		header_down Expires "0"
 	}
+
 	encode gzip
+
 	log {
 		format console
 		level DEBUG
