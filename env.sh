@@ -7,9 +7,13 @@ else
   ENV_FILE="invenio_prod.env"
 fi
 
-aws secretsmanager get-secret-value --secret-id Invenio | \
-  jq -r '.SecretString | fromjson | to_entries | .[] | .key + "=\"" + .value + "\""' > secrets.env
+{
+    echo "# Secrets fetched from AWS Secrets Manager"
+    aws secretsmanager get-secret-value --secret-id Invenio | \
+      jq -r '.SecretString | fromjson | to_entries | .[] | .key + "=\"" + .value + "\""'
+    echo ""
+} > secrets.env
 
-cat ./env/invenio.env "./env/$ENV_FILE" secrets.env > .env
+cat secrets.env ./env/invenio.env "./env/$ENV_FILE" > .env
 
 echo "Environment set up using $ENV_FILE"
