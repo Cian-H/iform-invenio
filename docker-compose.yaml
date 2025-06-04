@@ -12,7 +12,7 @@ services:
         volumes:
             - caddy_data:/data
             - ./caddy/${COMPOSE_PROFILES}:/etc/caddy
-            - site_data:/var/www:ro
+            - static_files:/var/www/static:ro
         restart: unless-stopped
         labels:
             - "io.containers.autoupdate=registry"
@@ -24,9 +24,9 @@ services:
         volumes:
             - uploaded_data:/opt/invenio/var/instance/data
             - archived_data:/opt/invenio/var/instance/archive
-            - site_data:/opt/invenio/var/instance/
-            # - ./invenio_assets:/opt/invenio/var/instance/static/custom_assets # Add static assets for theming
-            # - ./invenio.cfg:/opt/invenio/var/instance/invenio.cfg # Override the config with our custom one
+            - static_files:/opt/invenio/var/instance/static
+            - ./invenio_assets:/opt/invenio/var/instance/static/custom_assets
+            - ./invenio.cfg:/opt/invenio/var/instance/invenio.cfg
         environment:
             - INVENIO_THEME_LOGO
             - INVENIO_THEME_FRONTPAGE_TITLE
@@ -60,7 +60,11 @@ services:
             - INVENIO_MAIL_SUPPRESS_SEND
             - INVENIO_SECURITY_EMAIL_SENDER
             - INVENIO_ACCOUNTS_LOCAL_LOGIN_ENABLED
-            - INVENIO_GITHUB_APP_CREDENTIALS
+            - INVENIO_OAUTHCLIENT_REMOTE_APPS
+            - INVENIO_ORCID_APP_CREDENTIALS_CONSUMER_KEY=${INVENIO_ORCID_CLIENT_ID}
+            - INVENIO_ORCID_APP_CREDENTIALS_CONSUMER_SECRET=${INVENIO_ORCID_SECRET}
+            - INVENIO_GITHUB_APP_CREDENTIALS_CONSUMER_KEY=${INVENIO_GITHUB_CLIENT_ID}
+            - INVENIO_GITHUB_APP_CREDENTIALS_CONSUMER_SECRET=${INVENIO_GITHUB_SECRET}
             - INVENIO_OAISERVER_ID_PREFIX
             - INVENIO_FILES_REST_STORAGE_FACTORY
             - INVENIO_S3_ENDPOINT_URL
@@ -84,7 +88,6 @@ services:
                 condition: service_started
     worker:
         command: "celery -A invenio_app.celery worker --beat --events --loglevel=WARNING"
-        # command: "sh"
         build:
             context: .
         networks:
@@ -173,10 +176,8 @@ services:
         ports:
             - "9200:9200"
             - "9600:9600"
-
-    # Test SAML for development
     oauth2-proxy:
-        image: quay.io/oauth2-proxy/oauth2-proxy:latest
+        image: quay.io/oauth2-proxy/oauth2-proxy:latest-alpine
         profiles:
             - development
         ports:
@@ -184,24 +185,34 @@ services:
         environment:
             - OAUTH2_PROXY_PROVIDER=oidc
             - OAUTH2_PROXY_OIDC_ISSUER_URL=http://saml-idp:8080/simplesaml/saml2/idp
-            - OAUTH2_PROXY_CLIENT_ID=your-client-id
-            - OAUTH2_PROXY_CLIENT_SECRET=your-client-secret
-            - OAUTH2_PROXY_COOKIE_SECRET=${OAUTH2_PROXY_COOKIE_SECRET}
+            - OAUTH2_PROXY_CLIENT_ID=test-client
+            - OAUTH2_PROXY_CLIENT_SECRET=test-secret
+            - OAUTH2_PROXY_COOKIE_SECRET
             - OAUTH2_PROXY_EMAIL_DOMAINS=*
             - OAUTH2_PROXY_UPSTREAM=http://caddy:80
             - OAUTH2_PROXY_HTTP_ADDRESS=0.0.0.0:4180
             - OAUTH2_PROXY_REDIRECT_URL=http://localhost:4180/oauth2/callback
+            - OAUTH2_PROXY_SKIP_PROVIDER_BUTTON=false
+            - OAUTH2_PROXY_INSECURE_OIDC_ALLOW_UNVERIFIED_EMAIL=true
+            - OAUTH2_PROXY_PASS_ACCESS_TOKEN=true
+            - OAUTH2_PROXY_PASS_USER_HEADERS=true
+            - OAUTH2_PROXY_SET_XAUTHREQUEST=true
+            - OAUTH2_PROXY_SKIP_AUTH_REGEX=^/health$
         depends_on:
-            - saml-idp
-            - caddy
+            mock-oauth2:
+                condition: service_healthy
+            caddy:
+                condition: service_started
         networks:
             - invenio-network
+
+    # Mock OAuth2 server for development
     saml-idp:
         image: kristophjunge/test-saml-idp:latest
         profiles:
             - development
         ports:
-            - "8080:8080"
+            - "8090:8080"
         environment:
             - SIMPLESAMLPHP_SP_ENTITY_ID=http://localhost:4180
             - SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE=http://localhost:4180/oauth2/callback
@@ -217,7 +228,7 @@ volumes:
     app_data:
     uploaded_data:
     archived_data:
-    site_data:
+    static_files:
     postgres_data:
     opensearch_data:
     valkey_data:
