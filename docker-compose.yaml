@@ -25,7 +25,6 @@ services:
             - uploaded_data:/opt/invenio/var/instance/data
             - archived_data:/opt/invenio/var/instance/archive
             - static_files:/opt/invenio/var/instance/static
-            - ./invenio_assets:/opt/invenio/var/instance/static/custom_assets
             - ./invenio.cfg:/opt/invenio/var/instance/invenio.cfg
         environment:
             - INVENIO_THEME_LOGO
@@ -182,42 +181,9 @@ services:
             - development
         ports:
             - "4180:4180"
-        environment:
-            - OAUTH2_PROXY_PROVIDER=oidc
-            - OAUTH2_PROXY_OIDC_ISSUER_URL=http://saml-idp:8080/simplesaml/saml2/idp
-            - OAUTH2_PROXY_CLIENT_ID=test-client
-            - OAUTH2_PROXY_CLIENT_SECRET=test-secret
-            - OAUTH2_PROXY_COOKIE_SECRET
-            - OAUTH2_PROXY_EMAIL_DOMAINS=*
-            - OAUTH2_PROXY_UPSTREAM=http://caddy:80
-            - OAUTH2_PROXY_HTTP_ADDRESS=0.0.0.0:4180
-            - OAUTH2_PROXY_REDIRECT_URL=http://localhost:4180/oauth2/callback
-            - OAUTH2_PROXY_SKIP_PROVIDER_BUTTON=false
-            - OAUTH2_PROXY_INSECURE_OIDC_ALLOW_UNVERIFIED_EMAIL=true
-            - OAUTH2_PROXY_PASS_ACCESS_TOKEN=true
-            - OAUTH2_PROXY_PASS_USER_HEADERS=true
-            - OAUTH2_PROXY_SET_XAUTHREQUEST=true
-            - OAUTH2_PROXY_SKIP_AUTH_REGEX=^/health$
         depends_on:
-            mock-oauth2:
-                condition: service_healthy
             caddy:
                 condition: service_started
-        networks:
-            - invenio-network
-
-    # Mock OAuth2 server for development
-    saml-idp:
-        image: kristophjunge/test-saml-idp:latest
-        profiles:
-            - development
-        ports:
-            - "8090:8080"
-        environment:
-            - SIMPLESAMLPHP_SP_ENTITY_ID=http://localhost:4180
-            - SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE=http://localhost:4180/oauth2/callback
-        volumes:
-            - ./saml/authsources.php:/var/www/simplesamlphp/config/authsources.php:ro
         networks:
             - invenio-network
 
