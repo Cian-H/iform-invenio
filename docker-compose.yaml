@@ -11,7 +11,7 @@ services:
             - "8443:443"
         volumes:
             - caddy_data:/data
-            - ./caddy/${COMPOSE_PROFILES}:/etc/caddy
+            - ./env/${COMPOSE_PROFILES}/caddy:/etc/caddy
             - static_files:/var/www/static:ro
         restart: unless-stopped
         labels:

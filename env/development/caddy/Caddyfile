@@ -8,6 +8,9 @@ localhost {
         file_server
     }
 
+    handle_path /oauth* {
+    }
+
 	reverse_proxy invenio-rdm:5000 {
 		header_down Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
 		header_down Pragma "no-cache"
