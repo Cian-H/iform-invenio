@@ -15,5 +15,6 @@ fi
 } > secrets.env
 
 cat secrets.env ./env/invenio.env "./env/$ENV_FILE" > .env
+rm secrets.env
 
 echo "Environment set up using $ENV_FILE"
