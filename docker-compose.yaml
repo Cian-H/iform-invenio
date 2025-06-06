@@ -12,7 +12,6 @@ services:
         volumes:
             - caddy_data:/data
             - ./env/${COMPOSE_PROFILES}/caddy:/etc/caddy
-            - static_files:/var/www/static:ro
         restart: unless-stopped
         labels:
             - "io.containers.autoupdate=registry"
@@ -26,6 +25,7 @@ services:
             - archived_data:/opt/invenio/var/instance/archive
             - static_files:/opt/invenio/var/instance/static
             - ./invenio.cfg:/opt/invenio/var/instance/invenio.cfg
+            - ./dev_templates:/dev_templates
         environment:
             - INVENIO_THEME_LOGO
             - INVENIO_THEME_FRONTPAGE_TITLE
@@ -59,7 +59,6 @@ services:
             - INVENIO_MAIL_SUPPRESS_SEND
             - INVENIO_SECURITY_EMAIL_SENDER
             - INVENIO_ACCOUNTS_LOCAL_LOGIN_ENABLED
-            - INVENIO_OAUTHCLIENT_REMOTE_APPS
             - INVENIO_ORCID_APP_CREDENTIALS_CONSUMER_KEY=${INVENIO_ORCID_CLIENT_ID}
             - INVENIO_ORCID_APP_CREDENTIALS_CONSUMER_SECRET=${INVENIO_ORCID_SECRET}
             - INVENIO_GITHUB_APP_CREDENTIALS_CONSUMER_KEY=${INVENIO_GITHUB_CLIENT_ID}
@@ -73,7 +72,6 @@ services:
             - INVENIO_SEARCH_HOSTS
             - INVENIO_SEARCH_INDEX_PREFIX
             - INVENIO_LOGGING_CONSOLE_LEVEL
-            - INVENIO_APP_ALLOWED_HOSTS
             - INVENIO_ENV=${COMPOSE_PROFILES}
             - FLASK_ENV=${COMPOSE_PROFILES}
             - NODE_ENV=${COMPOSE_PROFILES}
@@ -175,17 +173,6 @@ services:
         ports:
             - "9200:9200"
             - "9600:9600"
-    oauth2-proxy:
-        image: quay.io/oauth2-proxy/oauth2-proxy:latest-alpine
-        profiles:
-            - development
-        ports:
-            - "4180:4180"
-        depends_on:
-            caddy:
-                condition: service_started
-        networks:
-            - invenio-network
 
 networks:
     invenio-network:
