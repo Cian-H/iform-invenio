@@ -7,15 +7,22 @@
 }: {
   packages = with pkgs; [
     awscli2
-    bun
     git
     jq
+    nodejs
+    uv
   ];
 
   dotenv.enable = true;
 
-  languages.javascript.bun = {
-    enable = true;
-    install.enable = true;
+  languages = {
+    python = {
+      enable = true;
+      uv.enable = true;
+    };
+    javascript.npm = {
+      enable = true;
+      install.enable = true;
+    };
   };
 }
