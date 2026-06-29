@@ -10,9 +10,15 @@
 
 FROM registry.cern.ch/inveniosoftware/almalinux:1
 
+ENV UV_PYTHON=3.12
+ENV PIPENV_VENV_IN_PROJECT=1
+
 COPY site ./site
 COPY Pipfile Pipfile.lock ./
-RUN pipenv install --deploy --system
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+RUN uv python install ${UV_PYTHON} && \
+    pipenv install --deploy --python $(uv python find ${UV_PYTHON}) && \
+    pipenv run pip install "setuptools<70.0.0"
 
 COPY ./docker/uwsgi/ ${INVENIO_INSTANCE_PATH}
 COPY ./invenio.cfg ${INVENIO_INSTANCE_PATH}
@@ -21,9 +27,14 @@ COPY ./app_data/ ${INVENIO_INSTANCE_PATH}/app_data/
 COPY ./translations/ ${INVENIO_INSTANCE_PATH}/translations/
 COPY ./ .
 
+RUN curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - && \
+    dnf install -y nodejs
+
+ENV WEBPACKEXT_PROJECT="invenio_assets.webpack:rspack_project"
 RUN cp -r ./static/. ${INVENIO_INSTANCE_PATH}/static/ && \
     cp -r ./assets/. ${INVENIO_INSTANCE_PATH}/assets/ && \
-    invenio collect --verbose  && \
-    invenio webpack buildall
+    uv run invenio collect --verbose  && \
+    npm config set legacy-peer-deps true && \
+    uv run invenio webpack buildall
 
-ENTRYPOINT [ "bash", "-c"]
+ENV PATH="/opt/invenio/src/.venv/bin:$PATH"

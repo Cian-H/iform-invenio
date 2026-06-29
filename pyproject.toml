@@ -3,5 +3,5 @@ name = "iform-invenio"
 version = "0.1.0"
 description = "The source code for the I-Form Data Repository"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = ["invenio-cli>=1.9.2"]

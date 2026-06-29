@@ -7,12 +7,13 @@ verify_ssl = true
 check-manifest = ">=0.25"
 
 [packages]
-invenio-app-rdm = {extras = ["opensearch2", "s3"], version = "~=13.0.0"}
+invenio-app-rdm = {extras = ["opensearch2", "s3"], version = ">=13.0.0"}
 i-form-data-repository = {editable = true, path="./site"}
 
 uwsgi = ">=2.0"
 uwsgitop = ">=0.11"
 uwsgi-tools = ">=1.1.1"
+nh3 = ">=0.2.24"
 
 [requires]
 python_version = "3.12"
