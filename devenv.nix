@@ -13,6 +13,7 @@
     jq
     nodejs
     uv
+    libxcrypt
   ];
 
   dotenv.enable = true;

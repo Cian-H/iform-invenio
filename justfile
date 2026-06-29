@@ -3,11 +3,11 @@ update auto-rollback="false":
     if [ ! -f update.lock ]; then
         touch update.lock
         just tag-version
-        docker compose down
+        cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env down
         git pull
-        docker compose pull
-        docker compose build
-        docker compose up -d --wait
+        cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env pull
+        cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env build
+        cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env up -d --wait
         rm update.lock
         if [ "{{auto-rollback}}" = "true" ]; then
             just healthcheck || just rollback
@@ -29,7 +29,7 @@ tag-version:
     #!/usr/bin/env bash
     git tag backup-$(date +%Y%m%d-%H%M%S)
     mkdir -p versions
-    docker compose images | grep -v "REPOSITORY" > versions/$(date +%Y%m%d-%H%M%S).txt
+    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env images | grep -v "REPOSITORY" > ../versions/$(date +%Y%m%d-%H%M%S).txt
 
 healthcheck:
     #!/usr/bin/env bash
@@ -66,9 +66,9 @@ rollback version="":
 
     # Then check out the version and update
     git checkout $version
-    docker compose down
-    docker compose build --no-cache
-    docker compose up -d
+    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env down
+    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env build --no-cache
+    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env up -d
     git switch $current_branch  # Return to original branch
 
 cleanup-versions:
@@ -81,8 +81,8 @@ cleanup-versions:
 
 deploy *args:
     ./env.sh {{args}}
-    docker compose up -d --wait
-    docker compose exec -it worker setup.sh
+    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env up -d --wait
+    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env exec worker setup.sh
 
 fmt:
     bun run prettier --write "**/*.{js,jsx,ts,tsx,html,css,scss,sass,svelte,yaml,json,markdown}"

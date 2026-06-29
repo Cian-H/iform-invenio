@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2875096a1ea2fe88c60e3a01b8b2b3b9ce8bc842c2c28ab1d5297801fb37a202"
+            "sha256": "93c2614dd20dc16ea261ac4eea1669886e44937ce4305ff87f299034167e05a3"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1649,6 +1649,15 @@
             "markers": "python_version >= '3.7'",
             "version": "==1.1.0"
         },
+        "invenio-config-iform": {
+            "hashes": [
+                "sha256:850d34233260565bc2a8c0871e6b7245b4c3fbaace433998df4dc634f303eaa7",
+                "sha256:e712376a229631c4ab4435db5876547aa93c123473c8744d1bcfc1848e570fd8"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.10' and python_version < '3.14'",
+            "version": "==2025.5.20.21"
+        },
         "invenio-db": {
             "extras": [
                 "mysql",
@@ -1828,6 +1837,30 @@
             ],
             "version": "==1.2.1"
         },
+        "invenio-records-global-search": {
+            "hashes": [
+                "sha256:6940d4fe1d5f3545f9e38735c9bc3eea67a4299d13575b479b2ca1e7cd25e9ed",
+                "sha256:6e4ea9533247542436f1b2920707ad9ace9202159d3a5dab4c96b121f906ff79"
+            ],
+            "markers": "python_version >= '3.12'",
+            "version": "==0.5.0"
+        },
+        "invenio-records-lom": {
+            "hashes": [
+                "sha256:4a71c917e4b4407c527472d6a1b2800e7e252c29fc241c232aba7dd649be170b",
+                "sha256:9e7d6c98f3a8c38ae55bd733a55fca07f46ed3ba87e78cf238700194a572b5f4"
+            ],
+            "markers": "python_version >= '3.12'",
+            "version": "==0.19.4"
+        },
+        "invenio-records-marc21": {
+            "hashes": [
+                "sha256:028701f8903f8509ea23c5f693a6d0bdc9a46d7a81ba2d24ec7aa8b437930722",
+                "sha256:50eeb45345a54a8023423c7b609ff7ddb807a332d655d97a85ae5a5af09a5c70"
+            ],
+            "markers": "python_version >= '3.12'",
+            "version": "==0.27.1"
+        },
         "invenio-records-permissions": {
             "hashes": [
                 "sha256:8c3f60c937fce3c8fa1bcd68a894ebaebb03217587220cb1f4a00486ff2346da",
@@ -1926,6 +1959,15 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==4.8.0"
+        },
+        "invenio-theme-iform": {
+            "hashes": [
+                "sha256:0a4f1df0ec7caec268e2659e9e074827a56e60508d9ae8fb5295765a3589294c",
+                "sha256:c011fefc12b23902894449834d5279059d917555e89201382f43ef567abc4890"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.10' and python_version < '3.14'",
+            "version": "==2025.6.6.4"
         },
         "invenio-userprofiles": {
             "hashes": [
@@ -2154,11 +2196,11 @@
         },
         "jupyterlab": {
             "hashes": [
-                "sha256:6a8b88f2aae7ed4d012c634fc957c1a27f3aa217c32f0ced0175fac9ee17f9e5",
-                "sha256:b6938cb8a1ef3d43860ff4745a680c62cc0a9385f9672295bb56cd2e7cfeebe2"
+                "sha256:75315982ed28427edaa62bb85eadb5105e4043a757643c910efd787fe6ed0837",
+                "sha256:85a58546c831f3dce6cf919468c26874c9065e99c42279fb4abb8e1b552a98bb"
             ],
             "markers": "python_version >= '3.10'",
-            "version": "==4.6.0"
+            "version": "==4.6.1"
         },
         "jupyterlab-pygments": {
             "hashes": [
@@ -4807,11 +4849,11 @@
         },
         "wcwidth": {
             "hashes": [
-                "sha256:f453740b1e4a4f3291faa37944c555d71056c4da08d59809b307ef4feba695c8",
-                "sha256:faf5b4a5366a72dc49cad48cdf21f52bdf63bdda995178e483ba247ff79089b9"
+                "sha256:91fbef97204b96a3d4d421609b80340b760cf33e26da123ff243d76b1fda8dda",
+                "sha256:d63947694a0539a1d51e01eda7caf800c291020e6cdd7e28ad7b14dd33ad4f85"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==0.8.1"
+            "version": "==0.8.2"
         },
         "webargs": {
             "hashes": [
