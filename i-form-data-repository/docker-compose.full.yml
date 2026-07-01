@@ -23,18 +23,26 @@ services:
     extends:
       file: docker-services.yml
       service: cache
+    volumes:
+      - cache_data:/data
   db:
     extends:
       file: docker-services.yml
       service: db
+    volumes:
+      - data:/var/lib/postgresql/data
   mq:
     extends:
       file: docker-services.yml
       service: mq
+    volumes:
+      - mq_data:/var/lib/rabbitmq
   search:
     extends:
       file: docker-services.yml
       service: search
+    volumes:
+      - search_data:/usr/share/opensearch/data
   opensearch-dashboards:
     extends:
       file: docker-services.yml
@@ -115,3 +123,6 @@ services:
 volumes:
   static_data:
   data:
+  search_data:
+  mq_data:
+  cache_data:

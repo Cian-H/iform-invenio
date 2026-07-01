@@ -82,7 +82,7 @@ cleanup-versions:
 deploy *args:
     ./env.sh {{args}}
     cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env up -d --wait
-    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env exec worker setup.sh
+    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env exec worker bash -c "invenio db init || true; invenio db create || true; invenio alembic upgrade || true; invenio index init || true"
 
 fmt:
     bun run prettier --write "**/*.{js,jsx,ts,tsx,html,css,scss,sass,svelte,yaml,json,markdown}"
@@ -104,5 +104,5 @@ test-local:
     docker compose -f docker-compose.full.yml --env-file ../.env build --build-arg INSTALL_LOCAL_WHEELS=true
     docker compose -f docker-compose.full.yml --env-file ../.env up -d --wait
     docker compose -f docker-compose.full.yml --env-file ../.env restart frontend
-    docker compose -f docker-compose.full.yml --env-file ../.env exec worker setup.sh
+    docker compose -f docker-compose.full.yml --env-file ../.env exec worker bash -c "invenio db init || true; invenio db create || true; invenio alembic upgrade || true; invenio index init || true"
     curl -skI https://127.0.0.1:8443/ || echo "HTTPS verification failed"
