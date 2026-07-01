@@ -73,3 +73,7 @@ data/.minio.sys
 
 # Celery
 celerybeat-schedule
+
+# Local testing
+local_wheels/*
+!local_wheels/.gitkeep

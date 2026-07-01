@@ -30,6 +30,14 @@ COPY ./ .
 RUN curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - && \
     dnf install -y nodejs
 
+ARG INSTALL_LOCAL_WHEELS=false
+COPY ./local_wheels/ ./local_wheels/
+RUN if [ "$INSTALL_LOCAL_WHEELS" = "true" ]; then \
+        if ls ./local_wheels/invenio_theme_iform*.whl ./local_wheels/invenio_config_iform*.whl 1> /dev/null 2>&1; then \
+            pipenv run pip install --no-deps --force-reinstall ./local_wheels/invenio_theme_iform*.whl ./local_wheels/invenio_config_iform*.whl; \
+        fi \
+    fi
+
 ENV WEBPACKEXT_PROJECT="invenio_assets.webpack:rspack_project"
 RUN cp -r ./static/. ${INVENIO_INSTANCE_PATH}/static/ && \
     cp -r ./assets/. ${INVENIO_INSTANCE_PATH}/assets/ && \

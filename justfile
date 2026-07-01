@@ -86,3 +86,23 @@ deploy *args:
 
 fmt:
     bun run prettier --write "**/*.{js,jsx,ts,tsx,html,css,scss,sass,svelte,yaml,json,markdown}"
+
+test-local:
+    #!/usr/bin/env bash
+    echo "Building fresh wheels for local packages..."
+    mkdir -p i-form-data-repository/local_wheels
+    rm -f i-form-data-repository/local_wheels/*.whl
+
+    (cd ../invenio-theme-iform && rm -rf dist && uvx --from build pyproject-build -w)
+    cp ../invenio-theme-iform/dist/*.whl i-form-data-repository/local_wheels/
+
+    (cd ../invenio-config-iform && rm -rf dist && uvx --from build pyproject-build -w)
+    cp ../invenio-config-iform/dist/*.whl i-form-data-repository/local_wheels/
+
+    echo "Rebuilding and restarting local docker stack..."
+    cd i-form-data-repository
+    docker compose -f docker-compose.full.yml --env-file ../.env build --build-arg INSTALL_LOCAL_WHEELS=true
+    docker compose -f docker-compose.full.yml --env-file ../.env up -d --wait
+    docker compose -f docker-compose.full.yml --env-file ../.env restart frontend
+    docker compose -f docker-compose.full.yml --env-file ../.env exec worker setup.sh
+    curl -skI https://127.0.0.1:8443/ || echo "HTTPS verification failed"
