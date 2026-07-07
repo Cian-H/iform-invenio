@@ -39,9 +39,12 @@ RUN if [ "$INSTALL_LOCAL_WHEELS" = "true" ]; then \
     fi
 
 ENV WEBPACKEXT_PROJECT="invenio_assets.webpack:rspack_project"
+COPY patch_js_translations.py /opt/invenio/src/patch_js_translations.py
 RUN cp -r ./static/. ${INVENIO_INSTANCE_PATH}/static/ && \
     cp -r ./assets/. ${INVENIO_INSTANCE_PATH}/assets/ && \
     uv run invenio collect --verbose  && \
+    uv run invenio i18n js-translation build --all-packages && \
+    uv run python patch_js_translations.py && \
     npm config set legacy-peer-deps true && \
     uv run invenio webpack buildall
 

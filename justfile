@@ -93,16 +93,16 @@ test-local:
     mkdir -p i-form-data-repository/local_wheels
     rm -f i-form-data-repository/local_wheels/*.whl
 
-    (cd ../invenio-theme-iform && rm -rf dist && uvx --from build pyproject-build -w)
+    (cd ../invenio-theme-iform && rm -rf dist && uv run pybabel compile -d invenio_theme_iform/translations && uvx --from build pyproject-build -w)
     cp ../invenio-theme-iform/dist/*.whl i-form-data-repository/local_wheels/
 
-    (cd ../invenio-config-iform && rm -rf dist && uvx --from build pyproject-build -w)
+    (cd ../invenio-config-iform && rm -rf dist && uv run pybabel compile -d invenio_config_iform/translations && uvx --from build pyproject-build -w)
     cp ../invenio-config-iform/dist/*.whl i-form-data-repository/local_wheels/
 
     echo "Rebuilding and restarting local docker stack..."
     cd i-form-data-repository
-    docker compose -f docker-compose.full.yml --env-file ../.env build --build-arg INSTALL_LOCAL_WHEELS=true
+    docker compose -f docker-compose.full.yml --env-file ../.env down
+    docker compose -f docker-compose.full.yml --env-file ../.env build --no-cache --build-arg INSTALL_LOCAL_WHEELS=true
     docker compose -f docker-compose.full.yml --env-file ../.env up -d --wait
-    docker compose -f docker-compose.full.yml --env-file ../.env restart frontend
     docker compose -f docker-compose.full.yml --env-file ../.env exec worker bash -c "invenio db init || true; invenio db create || true; invenio alembic upgrade || true; invenio index init || true"
     curl -skI https://127.0.0.1:8443/ || echo "HTTPS verification failed"
