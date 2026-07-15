@@ -87,7 +87,7 @@ deploy *args:
 fmt:
     bun run prettier --write "**/*.{js,jsx,ts,tsx,html,css,scss,sass,svelte,yaml,json,markdown}"
 
-test-local:
+build-wheels:
     #!/usr/bin/env bash
     echo "Building fresh wheels for local packages..."
     mkdir -p i-form-data-repository/local_wheels
@@ -99,10 +99,12 @@ test-local:
     (cd ../invenio-config-iform && rm -rf dist && uv run pybabel compile -d invenio_config_iform/translations && uvx --from build pyproject-build -w)
     cp ../invenio-config-iform/dist/*.whl i-form-data-repository/local_wheels/
 
+test-local: build-wheels
+    #!/usr/bin/env bash
     echo "Rebuilding and restarting local docker stack..."
     cd i-form-data-repository
     docker compose -f docker-compose.full.yml --env-file ../.env down
-    docker compose -f docker-compose.full.yml --env-file ../.env build --no-cache --build-arg INSTALL_LOCAL_WHEELS=true
+    docker build -t i-form-data-repository:latest --no-cache --build-arg INSTALL_LOCAL_WHEELS=true .
     docker compose -f docker-compose.full.yml --env-file ../.env up -d --wait
     docker compose -f docker-compose.full.yml --env-file ../.env exec worker bash -c "invenio db init || true; invenio db create || true; invenio alembic upgrade || true; invenio index init || true"
     curl -skI https://127.0.0.1:8443/ || echo "HTTPS verification failed"
@@ -113,31 +115,36 @@ load-aws-secrets:
     @if [ -f aws_secrets.sh ]; then . ./aws_secrets.sh; else echo "AWS secrets file not found"; exit 1; fi
 
 # First-time deployment to production
-prod-deploy: load-aws-secrets
-    @echo "Deploying to production (first-time)..."
+prod-deploy: load-aws-secrets build-wheels
+    #!/usr/bin/env bash
+    echo "Deploying to production (first-time)..."
     git switch prod
     git pull origin prod
     # Build and start containers
-    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env up -d --build --wait
+    cd i-form-data-repository
+    docker build -t i-form-data-repository:latest --no-cache --build-arg INSTALL_LOCAL_WHEELS=true .
+    docker compose -f docker-compose.full.yml --env-file ../.env up -d --wait
     # Run initial database setup, migrations, and collect static assets
-    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env exec worker bash -c "
+    docker compose -f docker-compose.full.yml --env-file ../.env exec worker bash -c " \
         invenio db init && \
         invenio db create && \
         invenio alembic upgrade head && \
         invenio collect -v && \
-        invenio index init
+        invenio index init \
     "
 
 # Update production without full redeploy (pull + migrations + static)
-prod-update: load-aws-secrets
-    @echo "Updating production deployment..."
+prod-update: load-aws-secrets build-wheels
+    #!/usr/bin/env bash
+    echo "Updating production deployment..."
     git switch prod
     git pull origin prod
-    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env pull
-    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env up -d --wait
-    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env exec worker bash -c "
+    cd i-form-data-repository
+    docker build -t i-form-data-repository:latest --no-cache --build-arg INSTALL_LOCAL_WHEELS=true .
+    docker compose -f docker-compose.full.yml --env-file ../.env up -d --wait
+    docker compose -f docker-compose.full.yml --env-file ../.env exec worker bash -c " \
         invenio alembic upgrade head && \
-        invenio collect -v
+        invenio collect -v \
     "
 
 # Clean all build artefacts and environment
