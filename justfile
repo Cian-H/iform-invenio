@@ -106,3 +106,44 @@ test-local:
     docker compose -f docker-compose.full.yml --env-file ../.env up -d --wait
     docker compose -f docker-compose.full.yml --env-file ../.env exec worker bash -c "invenio db init || true; invenio db create || true; invenio alembic upgrade || true; invenio index init || true"
     curl -skI https://127.0.0.1:8443/ || echo "HTTPS verification failed"
+# Production deployment commands using Docker/Podman
+
+# Load AWS secrets (adjust path as needed)
+load-aws-secrets:
+    @if [ -f aws_secrets.sh ]; then . ./aws_secrets.sh; else echo "AWS secrets file not found"; exit 1; fi
+
+# First-time deployment to production
+prod-deploy: load-aws-secrets
+    @echo "Deploying to production (first-time)..."
+    git switch prod
+    git pull origin prod
+    # Build and start containers
+    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env up -d --build --wait
+    # Run initial database setup, migrations, and collect static assets
+    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env exec worker bash -c "
+        invenio db init && \
+        invenio db create && \
+        invenio alembic upgrade head && \
+        invenio collect -v && \
+        invenio index init
+    "
+
+# Update production without full redeploy (pull + migrations + static)
+prod-update: load-aws-secrets
+    @echo "Updating production deployment..."
+    git switch prod
+    git pull origin prod
+    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env pull
+    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env up -d --wait
+    cd i-form-data-repository && docker compose -f docker-compose.full.yml --env-file ../.env exec worker bash -c "
+        invenio alembic upgrade head && \
+        invenio collect -v
+    "
+
+# Clean all build artefacts and environment
+prod-clean:
+    @echo "Cleaning production build artefacts..."
+    rm -rf .venv build dist *.egg-info
+    find . -type d -name "__pycache__" -exec rm -r {} + || true
+    rm -rf static node_modules
+    echo "Clean complete. Re‑create environment before next deploy."
