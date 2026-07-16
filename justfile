@@ -87,16 +87,21 @@ deploy *args:
 fmt:
     bun run prettier --write "**/*.{js,jsx,ts,tsx,html,css,scss,sass,svelte,yaml,json,markdown}"
 
-build-wheels:
-    #!/usr/bin/env bash
+[working-directory("../invenio-theme-iform/")]
+build-theme-wheel:
+    rm -rf dist
+    direnv exec . uv build --package invenio-theme-iform
+
+[working-directory("../invenio-config-iform/")]
+build-config-wheel:
+    rm -rf dist
+    direnv exec . uv build --package invenio-config-iform
+
+build-wheels: build-theme-wheel build-config-wheel
     echo "Building fresh wheels for local packages..."
     mkdir -p i-form-data-repository/local_wheels
     rm -f i-form-data-repository/local_wheels/*.whl
-
-    (cd ../invenio-theme-iform && rm -rf dist && uv run pybabel compile -d invenio_theme_iform/translations && uvx --from build pyproject-build -w)
     cp ../invenio-theme-iform/dist/*.whl i-form-data-repository/local_wheels/
-
-    (cd ../invenio-config-iform && rm -rf dist && uv run pybabel compile -d invenio_config_iform/translations && uvx --from build pyproject-build -w)
     cp ../invenio-config-iform/dist/*.whl i-form-data-repository/local_wheels/
 
 test-local: build-wheels
