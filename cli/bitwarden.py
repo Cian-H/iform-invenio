@@ -80,13 +80,26 @@ def pull():
     with local.env(BW_SESSION=session_key):
         logger.info("Syncing vault...")
         try:
-            bw("sync")
+            bw("sync", "--session", session_key)
         except ProcessExecutionError as e:
             logger.warning(f"Failed to sync vault (continuing anyway): {e}")
 
         logger.info(f"Fetching item: {config.bitwarden_item_name}...")
         try:
-            items_json = bw("list", "items", "--search", config.bitwarden_item_name)
+            items_json = bw(
+                "list",
+                "items",
+                "--search",
+                config.bitwarden_item_name,
+                "--session",
+                session_key,
+            )
+
+            if not items_json or not items_json.strip():
+                logger.error(
+                    "Bitwarden CLI returned a completely empty response! Please try running 'uv run cli bw login' again to refresh your session."
+                )
+                raise typer.Exit(1)
 
             # bw CLI can sometimes prepend warnings to stdout (like update available)
             start = items_json.find("[")
