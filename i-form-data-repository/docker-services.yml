@@ -17,7 +17,7 @@ services:
       - "INVENIO_COMMUNITIES_IDENTITIES_CACHE_REDIS_URL=redis://cache:6379/4"
       - "INVENIO_SEARCH_HOSTS=['search:9200']"
       - "INVENIO_SECRET_KEY=CHANGE_ME"
-      - "INVENIO_SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://i-form-data-repository:i-form-data-repository@db/i-form-data-repository"
+      - "INVENIO_SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://${POSTGRES_USER:-i-form-data-repository}:${POSTGRES_PASSWORD:-i-form-data-repository}@db/${POSTGRES_DB:-i-form-data-repository}"
       - "INVENIO_WSGI_PROXIES=1"
       - "INVENIO_RATELIMIT_STORAGE_URL=redis://cache:6379/3"
       - "INVENIO_S3_ACCESS_KEY_ID=${INVENIO_S3_ACCESS_KEY_ID}"
@@ -53,9 +53,9 @@ services:
     image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.11-0
     restart: "unless-stopped"
     environment:
-      - "POSTGRES_USER=i-form-data-repository"
-      - "POSTGRES_PASSWORD=i-form-data-repository"
-      - "POSTGRES_DB=i-form-data-repository"
+      - "POSTGRES_USER=${POSTGRES_USER:-i-form-data-repository}"
+      - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-i-form-data-repository}"
+      - "POSTGRES_DB=${POSTGRES_DB:-i-form-data-repository}"
       - "PGBACKREST_REPO1_TYPE=s3"
       - "PGBACKREST_REPO1_S3_BUCKET=${INVENIO_S3_BUCKET_NAME}"
       - "PGBACKREST_REPO1_S3_ENDPOINT=${INVENIO_S3_ENDPOINT_URL}"

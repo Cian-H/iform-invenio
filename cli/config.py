@@ -60,7 +60,7 @@ class Config(BaseSettings):
     ssl_key_name: str = Field(default="nginx.key")
 
     # Bitwarden Settings
-    bitwarden_item_name: str = Field(default="I-Form Invenio S3 Keys")
+    bitwarden_item_name: str = Field(default="I-Form Invenio Secrets")
     bitwarden_server_url: str | None = Field(default=None)
 
 
