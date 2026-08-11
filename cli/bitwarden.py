@@ -54,8 +54,12 @@ def login() -> bool:
 
     logger.info("Unlocking vault and saving session...")
     try:
-        # Prompt for master password and output just the raw session key
-        session_key = bw("unlock", "--raw").strip()
+        import getpass
+
+        pwd = getpass.getpass("Master password: ")
+        with local.env(BW_PASSWORD=pwd):
+            # Prompt for master password and output just the raw session key
+            session_key = bw("unlock", "--raw", "--passwordenv", "BW_PASSWORD").strip()
         BW_SESSION_FILE.write_text(session_key)
         BW_SESSION_FILE.chmod(0o600)
         logger.success("Session unlocked and cached securely in .bw_session")
