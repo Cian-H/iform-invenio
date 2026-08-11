@@ -43,6 +43,16 @@ services:
       options:
         max-size: "50m"
         max-file: "3"
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+  certbot:
+    image: docker.io/certbot/certbot
+    restart: "unless-stopped"
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   cache:
     image: docker.io/library/redis:7
     restart: "unless-stopped"
@@ -141,3 +151,6 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
+volumes:
+  certbot_conf:
+  certbot_www:

@@ -262,3 +262,35 @@ def prod_clean():
         rm("-rf", "static", "node_modules")
 
     logger.success("Clean complete. Re-create environment before next deploy.")
+
+
+@app.command()
+def init_ssl(
+    email: str = typer.Argument(
+        ..., help="Email address for Let's Encrypt registration"
+    ),
+    domain: str = typer.Argument(..., help="Domain name to fetch certificate for"),
+):
+    """Initialize Let's Encrypt SSL certificates for the first time."""
+    logger.info(f"Initializing Let's Encrypt SSL for {domain}...")
+
+    with local.cwd(REPO_DIR):
+        logger.info("Requesting certificate via certbot webroot...")
+        cmd = f"certbot certonly --webroot -w /var/www/certbot -d {domain} --email {email} --agree-tos --no-eff-email --force-renewal"
+        docker_compose("exec", "certbot", "sh", "-c", cmd)
+
+        logger.info("Restarting frontend to apply new certificates...")
+        docker_compose("restart", "frontend")
+
+    logger.success("SSL initialization complete!")
+
+
+@app.command()
+def renew_ssl():
+    """Manually force a renewal check for Let's Encrypt and reload Nginx."""
+    logger.info("Triggering manual SSL renewal check...")
+    with local.cwd(REPO_DIR):
+        docker_compose("exec", "certbot", "certbot", "renew")
+        logger.info("Reloading Nginx...")
+        docker_compose("exec", "frontend", "nginx", "-s", "reload")
+    logger.success("SSL renewal check complete!")
