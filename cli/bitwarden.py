@@ -86,13 +86,42 @@ def pull():
 
         logger.info(f"Fetching item: {config.bitwarden_item_name}...")
         try:
-            item_json = bw("get", "item", config.bitwarden_item_name)
-            item = json.loads(item_json)
-        except ProcessExecutionError as e:
+            items_json = bw("list", "items", "--search", config.bitwarden_item_name)
+
+            # bw CLI can sometimes prepend warnings to stdout (like update available)
+            start = items_json.find("[")
+            if start != -1:
+                items_json = items_json[start:]
+
+            items = json.loads(items_json)
+
+            if not items:
+                logger.error(f"Item '{config.bitwarden_item_name}' not found.")
+                raise typer.Exit(1)
+
+            # Exact match filtering
+            exact_matches = [
+                i for i in items if i.get("name") == config.bitwarden_item_name
+            ]
+
+            if len(exact_matches) > 1:
+                logger.error(
+                    f"Multiple exact matches found for '{config.bitwarden_item_name}'. Please ensure the name is unique."
+                )
+                raise typer.Exit(1)
+            elif len(exact_matches) == 1:
+                item = exact_matches[0]
+            else:
+                # Fallback to the first fuzzy match if no exact match
+                item = items[0]
+
+        except (ProcessExecutionError, json.JSONDecodeError) as e:
             logger.error(
-                f"Failed to fetch item '{config.bitwarden_item_name}'. Make sure the name is exact."
+                f"Failed to fetch item '{config.bitwarden_item_name}'. Check your Bitwarden vault."
             )
-            logger.debug(f"Details: {e}")
+            logger.debug(
+                f"Details: {e}\nRaw output: {items_json if 'items_json' in locals() else 'None'}"
+            )
             raise typer.Exit(1)
 
         notes = item.get("notes")
