@@ -1,6 +1,6 @@
 import typer
 from loguru import logger
-from plumbum import local
+from plumbum import FG, local
 from plumbum.cmd import docker, git, uv
 
 from cli.utils import docker_compose, get_project_root, get_repo_dir
@@ -130,11 +130,11 @@ def prod_deploy():
     """First-time deployment to production."""
 
     logger.info("Deploying to production (first-time)...")
-    git("switch", "prod")
-    git("pull", "origin", "prod")
+    git["switch", "prod"] & FG
+    git["pull", "origin", "prod"] & FG
 
     with local.cwd(REPO_DIR):
-        docker(
+        docker[
             "build",
             "-t",
             "i-form-data-repository:latest",
@@ -142,7 +142,7 @@ def prod_deploy():
             "--build-arg",
             "INSTALL_LOCAL_WHEELS=false",
             ".",
-        )
+        ] & FG
         docker_compose("up", "-d", "--wait")
 
         setup_cmd = "invenio db init && invenio db create && invenio alembic upgrade head && invenio collect -v && invenio index init"
@@ -172,11 +172,11 @@ def prod_update(
         logger.info("Tagging current version for potential rollback...")
         tag_version()
 
-        git("switch", "prod")
-        git("pull", "origin", "prod")
+        git["switch", "prod"] & FG
+        git["pull", "origin", "prod"] & FG
         with local.cwd(REPO_DIR):
             docker_compose("pull")
-            docker(
+            docker[
                 "build",
                 "-t",
                 "i-form-data-repository:latest",
@@ -184,7 +184,7 @@ def prod_update(
                 "--build-arg",
                 "INSTALL_LOCAL_WHEELS=false",
                 ".",
-            )
+            ] & FG
             docker_compose("up", "-d", "--wait")
 
             update_cmd = "invenio alembic upgrade head && invenio collect -v"
@@ -217,11 +217,11 @@ def merge_and_push_prod():
     current = git("branch", "--show-current").strip()
 
     try:
-        git("switch", "prod")
-        git("merge", "main")
-        git("switch", "main")
+        git["switch", "prod"] & FG
+        git["merge", "main"] & FG
+        git["switch", "main"] & FG
         logger.info("Pushing all branches...")
-        git("push", "--all")
+        git["push", "--all"] & FG
         logger.success("Merged and pushed to production.")
     finally:
         if current:
