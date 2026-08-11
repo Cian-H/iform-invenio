@@ -3,6 +3,7 @@ from loguru import logger
 from plumbum import FG, local
 from plumbum.cmd import docker, git, uv
 
+from cli.config import config
 from cli.utils import docker_compose, get_project_root, get_repo_dir
 
 app = typer.Typer(help="Deployment Management Tool")
@@ -133,17 +134,18 @@ def prod_deploy():
     git["switch", "prod"] & FG
     git["pull", "origin", "prod"] & FG
 
-    with local.cwd(REPO_DIR):
-        docker[
-            "build",
-            "-t",
-            "i-form-data-repository:latest",
-            "--no-cache",
-            "--build-arg",
-            "INSTALL_LOCAL_WHEELS=false",
-            ".",
-        ] & FG
-        docker_compose("up", "-d", "--wait")
+    with local.env(INVENIO_THEME_IFORM_PRODUCTION="true"):
+        with local.cwd(REPO_DIR):
+            docker[
+                "build",
+                "-t",
+                config.docker_image_name,
+                "--no-cache",
+                "--build-arg",
+                "INSTALL_LOCAL_WHEELS=false",
+                ".",
+            ] & FG
+            docker_compose("up", "-d", "--wait")
 
         setup_cmd = "invenio db init && invenio db create && invenio alembic upgrade head && invenio collect -v && invenio index init"
         docker_compose("exec", "worker", "bash", "-c", setup_cmd)
@@ -174,18 +176,19 @@ def prod_update(
 
         git["switch", "prod"] & FG
         git["pull", "origin", "prod"] & FG
-        with local.cwd(REPO_DIR):
-            docker_compose("pull")
-            docker[
-                "build",
-                "-t",
-                "i-form-data-repository:latest",
-                "--no-cache",
-                "--build-arg",
-                "INSTALL_LOCAL_WHEELS=false",
-                ".",
-            ] & FG
-            docker_compose("up", "-d", "--wait")
+        with local.env(INVENIO_THEME_IFORM_PRODUCTION="true"):
+            with local.cwd(REPO_DIR):
+                docker_compose("pull")
+                docker[
+                    "build",
+                    "-t",
+                    config.docker_image_name,
+                    "--no-cache",
+                    "--build-arg",
+                    "INSTALL_LOCAL_WHEELS=false",
+                    ".",
+                ] & FG
+                docker_compose("up", "-d", "--wait")
 
             update_cmd = "invenio alembic upgrade head && invenio collect -v"
             docker_compose("exec", "worker", "bash", "-c", update_cmd)

@@ -5,6 +5,7 @@ services:
       args:
         - ENVIRONMENT=DEV
     image: i-form-data-repository
+    env_file: ../.env
     restart: "unless-stopped"
     environment:
       - "INVENIO_ACCOUNTS_SESSION_REDIS_URL=redis://cache:6379/1"
@@ -21,6 +22,7 @@ services:
       - "INVENIO_RATELIMIT_STORAGE_URL=redis://cache:6379/3"
       - "INVENIO_S3_ACCESS_KEY_ID=${INVENIO_S3_ACCESS_KEY_ID}"
       - "INVENIO_S3_SECRET_ACCESS_KEY=${INVENIO_S3_SECRET_ACCESS_KEY}"
+      - "INVENIO_THEME_IFORM_PRODUCTION=${INVENIO_THEME_IFORM_PRODUCTION:-false}"
     logging:
       driver: "json-file"
       options:
@@ -31,6 +33,7 @@ services:
       context: ./docker/nginx/
       dockerfile: Dockerfile
     image: i-form-data-repository-frontend
+    env_file: ../.env
     restart: "unless-stopped"
     ports:
       - "${DOCKER_SERVICES_IP_BIND:-127.0.0.1}:8080:80"
