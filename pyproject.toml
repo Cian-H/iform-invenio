@@ -4,4 +4,50 @@ version = "0.1.0"
 description = "The source code for the I-Form Data Repository"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["invenio-cli>=1.9.2"]
+dependencies = [
+    "boto3>=1.43.68",
+    "bumpver>=2026.1132",
+    "click-repl>=0.3.0",
+    "invenio-cli>=1.9.2",
+    "loguru>=0.7.3",
+    "plumbum>=2.0.2",
+    "pydantic-settings>=2.15.0",
+    "python-dotenv>=1.2.2",
+    "requests>=2.32.5",
+    "trustme>=1.2.1",
+    "typer>=0.27.1",
+]
+
+[project.scripts]
+cli = "cli.__main__:app"
+
+[dependency-groups]
+dev = [
+    "pre-commit>=3.5.0",
+    "ruff>=0.16.2",
+    "ty>=0.0.70",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff.lint]
+ignore = ["BLE001", "B008", "S110", "C408"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["cli"]
+
+[tool.bumpver]
+current_version = "2026.8.1"
+version_pattern = "YYYY.MM.INC0"
+commit_message = "bump version {old_version} -> {new_version}"
+commit = true
+tag = true
+push = false
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = [
+    'version = "{version}"',
+]
+

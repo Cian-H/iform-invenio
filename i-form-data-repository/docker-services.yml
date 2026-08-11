@@ -17,8 +17,15 @@ services:
       - "INVENIO_SEARCH_HOSTS=['search:9200']"
       - "INVENIO_SECRET_KEY=CHANGE_ME"
       - "INVENIO_SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://i-form-data-repository:i-form-data-repository@db/i-form-data-repository"
-      - "INVENIO_WSGI_PROXIES=2"
+      - "INVENIO_WSGI_PROXIES=1"
       - "INVENIO_RATELIMIT_STORAGE_URL=redis://cache:6379/3"
+      - "INVENIO_S3_ACCESS_KEY_ID=${INVENIO_S3_ACCESS_KEY_ID}"
+      - "INVENIO_S3_SECRET_ACCESS_KEY=${INVENIO_S3_SECRET_ACCESS_KEY}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
   frontend:
     build:
       context: ./docker/nginx/
@@ -28,6 +35,11 @@ services:
     ports:
       - "${DOCKER_SERVICES_IP_BIND:-127.0.0.1}:8080:80"
       - "${DOCKER_SERVICES_IP_BIND:-127.0.0.1}:8443:443"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
   cache:
     image: docker.io/library/redis:7
     restart: "unless-stopped"
@@ -35,14 +47,26 @@ services:
     ports:
       - "${DOCKER_SERVICES_IP_BIND:-127.0.0.1}:6379:6379"
   db:
-    image: docker.io/library/postgres:14.13
+    image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.11-0
     restart: "unless-stopped"
     environment:
       - "POSTGRES_USER=i-form-data-repository"
       - "POSTGRES_PASSWORD=i-form-data-repository"
       - "POSTGRES_DB=i-form-data-repository"
+      - "PGBACKREST_REPO1_TYPE=s3"
+      - "PGBACKREST_REPO1_S3_BUCKET=${INVENIO_S3_BUCKET_NAME}"
+      - "PGBACKREST_REPO1_S3_ENDPOINT=${INVENIO_S3_ENDPOINT_URL}"
+      - "PGBACKREST_REPO1_S3_KEY=${INVENIO_S3_ACCESS_KEY_ID}"
+      - "PGBACKREST_REPO1_S3_KEY_SECRET=${INVENIO_S3_SECRET_ACCESS_KEY}"
+      - "PGBACKREST_REPO1_S3_REGION=${INVENIO_S3_REGION_NAME}"
+      - "PGBACKREST_REPO1_PATH=/backup/meta_db"
     ports:
       - "${DOCKER_SERVICES_IP_BIND:-127.0.0.1}:5432:5432"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
   pgadmin:
     image: docker.io/dpage/pgadmin4:6
     restart: "unless-stopped"
@@ -66,7 +90,7 @@ services:
       # settings only for development. DO NOT use in production!
       - bootstrap.memory_lock=true
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "OPENSEARCH_INITIAL_ADMIN_PASSWORD=guekxe3mvqieke1!%&ieIADE"
+      - "OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_PASSWORD:-guekxe3mvqieke1!%&ieIADE}"
       - "DISABLE_INSTALL_DEMO_CONFIG=true"
       - "DISABLE_SECURITY_PLUGIN=true"
       - "discovery.type=single-node"
@@ -82,6 +106,11 @@ services:
     ports:
       - "${DOCKER_SERVICES_IP_BIND:-127.0.0.1}:9200:9200"
       - "${DOCKER_SERVICES_IP_BIND:-127.0.0.1}:9600:9600"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
   opensearch-dashboards:
     image: docker.io/opensearchproject/opensearch-dashboards:2.17.1
     ports:

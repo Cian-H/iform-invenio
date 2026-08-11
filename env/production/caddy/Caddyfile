@@ -1,8 +1,0 @@
-{
-	admin off
-}
-
-invenio.i-form.ie {
-	reverse_proxy invenio-rdm:5000
-	encode gzip
-}

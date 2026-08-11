@@ -1,23 +1,23 @@
 {
-  "invenio_search_ui": {
-    "invenio_search_ui:Search records...": "Cuardaigh taifid..."
-  },
-  "invenio_communities": {
-    "invenio_communities:You are not a member of any community.": "Níl tú mar bhall d'aon phobal.",
-    "invenio_communities:There are no new communities.": "Níl aon phobail nua ann.",
-    "invenio_communities:My Communities": "Mo Phobail",
-    "invenio_communities:New Communities": "Pobail Nua",
-    "invenio_communities:Search communities...": "Cuardaigh pobail...",
-    "invenio_communities:Organize, curate and share your research. Ideal for research projects, departments or temporary working groups.": "Eagraigh, coimeád agus comhroinn do chuid taighde. Ideal do thionscadail taighde, ranna nó grúpaí oibre sealadacha."
-  },
-  "invenio_app_rdm": {
-    "invenio_app_rdm:Search records...": "Cuardaigh taifid...",
-    "invenio_app_rdm:Search in my communities": "Cuardaigh i mo phobail",
-    "invenio_app_rdm:Search in my communities...": "Cuardaigh i mo phobail...",
-    "invenio_app_rdm:My communities": "Mo phobail",
-    "invenio_app_rdm:Search in my uploads...": "Cuardaigh i mo chuid uaslódálacha...",
-    "invenio_app_rdm:My uploads": "Mo chuid uaslódálacha",
-    "invenio_app_rdm:Overview": "Foramharc",
-    "invenio_app_rdm:Uploads": "Uaslódálacha"
-  }
+    "invenio_search_ui": {
+        "invenio_search_ui:Search records...": "Cuardaigh taifid..."
+    },
+    "invenio_communities": {
+        "invenio_communities:You are not a member of any community.": "Níl tú mar bhall d'aon phobal.",
+        "invenio_communities:There are no new communities.": "Níl aon phobail nua ann.",
+        "invenio_communities:My Communities": "Mo Phobail",
+        "invenio_communities:New Communities": "Pobail Nua",
+        "invenio_communities:Search communities...": "Cuardaigh pobail...",
+        "invenio_communities:Organize, curate and share your research. Ideal for research projects, departments or temporary working groups.": "Eagraigh, coimeád agus comhroinn do chuid taighde. Ideal do thionscadail taighde, ranna nó grúpaí oibre sealadacha."
+    },
+    "invenio_app_rdm": {
+        "invenio_app_rdm:Search records...": "Cuardaigh taifid...",
+        "invenio_app_rdm:Search in my communities": "Cuardaigh i mo phobail",
+        "invenio_app_rdm:Search in my communities...": "Cuardaigh i mo phobail...",
+        "invenio_app_rdm:My communities": "Mo phobail",
+        "invenio_app_rdm:Search in my uploads...": "Cuardaigh i mo chuid uaslódálacha...",
+        "invenio_app_rdm:My uploads": "Mo chuid uaslódálacha",
+        "invenio_app_rdm:Overview": "Foramharc",
+        "invenio_app_rdm:Uploads": "Uaslódálacha"
+    }
 }

@@ -18,8 +18,11 @@ process.
 
 Once running, visit https://127.0.0.1 in your browser.
 
-**Note**: The server is using a self-signed SSL certificate, so your browser
-will issue a warning that you will have to by-pass.
+**Note**: The server uses a self-signed SSL certificate. You must generate it first by running:
+```console
+just generate-dev-certs
+```
+Your browser will issue a warning that you will have to by-pass.
 
 ## Overview
 
