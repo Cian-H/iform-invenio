@@ -2,8 +2,8 @@ FROM postgres:14.13
 
 RUN apt-get update && apt-get install -y curl cron && rm -rf /var/lib/apt/lists/*
 
-RUN curl -L "https://github.com/wal-g/wal-g/releases/download/v3.0.8/wal-g-pg-ubuntu-20.04-amd64.tar.gz" | tar -xz && \
-    mv wal-g-pg-ubuntu-20.04-amd64 /usr/local/bin/wal-g && \
+RUN curl -L "https://github.com/wal-g/wal-g/releases/download/v3.0.8/wal-g-pg-20.04-amd64.tar.gz" | tar -xz && \
+    mv wal-g-pg-20.04-amd64 /usr/local/bin/wal-g && \
     chmod +x /usr/local/bin/wal-g
 
 COPY setup-walg.sh /docker-entrypoint-initdb.d/
