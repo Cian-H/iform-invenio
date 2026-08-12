@@ -145,7 +145,7 @@ def prod_deploy():
         ] & FG
         docker_compose("up", "-d", "--wait")
 
-        setup_cmd = "invenio db init && invenio db create && invenio alembic upgrade head && invenio collect -v && invenio index init"
+        setup_cmd = "invenio db init && invenio db create && invenio alembic upgrade heads && invenio collect -v && invenio index init"
         docker_compose("exec", "worker", "bash", "-c", setup_cmd)
 
     logger.success("Production deployment complete!")
@@ -186,7 +186,7 @@ def prod_update(
             ] & FG
             docker_compose("up", "-d", "--wait")
 
-            update_cmd = "invenio alembic upgrade head && invenio collect -v"
+            update_cmd = "invenio alembic upgrade heads && invenio collect -v"
             docker_compose("exec", "worker", "bash", "-c", update_cmd)
 
         try:
