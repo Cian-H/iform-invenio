@@ -63,6 +63,8 @@ services:
     volumes:
       - static_data:/opt/invenio/var/instance/static
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:Z
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
     depends_on:
       - web-ui
       - web-api
@@ -120,9 +122,15 @@ services:
         condition: service_started
       db:
         condition: service_started
+  certbot:
+    extends:
+      file: docker-services.yml
+      service: certbot
 volumes:
   static_data:
   data:
   search_data:
   mq_data:
   cache_data:
+  certbot_conf:
+  certbot_www:
