@@ -69,8 +69,8 @@ services:
       - web-ui
       - web-api
     ports:
-      - "${DOCKER_SERVICES_IP_BIND:-127.0.0.1}:8080:80"
-      - "${DOCKER_SERVICES_IP_BIND:-127.0.0.1}:8443:443"
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
   # UI Application
   web-ui:
     extends:
