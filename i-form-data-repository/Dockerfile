@@ -13,12 +13,14 @@ FROM registry.cern.ch/inveniosoftware/almalinux:1
 ENV UV_PYTHON=3.12
 ENV PIPENV_VENV_IN_PROJECT=1
 
-COPY site ./site
+COPY site/setup.py site/setup.cfg site/pyproject.toml ./site/
 COPY Pipfile Pipfile.lock ./
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 RUN uv python install ${UV_PYTHON} && \
     pipenv install --deploy --python $(uv python find ${UV_PYTHON}) && \
     pipenv run pip install "setuptools<70.0.0"
+
+COPY site ./site
 
 COPY ./docker/uwsgi/ ${INVENIO_INSTANCE_PATH}
 COPY ./invenio.cfg ${INVENIO_INSTANCE_PATH}
