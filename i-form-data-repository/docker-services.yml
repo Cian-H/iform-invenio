@@ -60,7 +60,9 @@ services:
     ports:
       - "${DOCKER_SERVICES_IP_BIND:-127.0.0.1}:6379:6379"
   db:
-    build: ./docker/postgres
+    build:
+      context: ./docker/postgres
+      network: host
     restart: "unless-stopped"
     environment:
       - "POSTGRES_USER=${POSTGRES_USER:-i-form-data-repository}"
