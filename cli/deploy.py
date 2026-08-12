@@ -47,7 +47,13 @@ def tag_version():
     except Exception as e:
         logger.error(f"Bumpver failed: {e}")
 
-    current_tag = git("describe", "--tags", "--abbrev=0").strip()
+    try:
+        current_tag = git("describe", "--tags", "--abbrev=0").strip()
+    except Exception:
+        import datetime
+
+        current_tag = "v" + datetime.datetime.now(datetime.UTC).strftime("%Y%m%d%H%M%S")
+        logger.warning(f"No git tags found, using timestamp {current_tag}")
     logger.info(f"Current tag is {current_tag}")
 
     with local.cwd(REPO_DIR):
