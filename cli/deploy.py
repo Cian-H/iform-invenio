@@ -181,7 +181,7 @@ def prod_update(
         git["switch", "prod"] & FG
         git["pull", "origin", "prod"] & FG
         with local.env(INVENIO_THEME_IFORM_PRODUCTION="true"), local.cwd(REPO_DIR):
-            docker_compose("pull")
+            docker_compose("pull", "--ignore-pull-failures")
             docker[
                 "build",
                 "-t",
