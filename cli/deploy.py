@@ -192,6 +192,9 @@ def prod_update(
             ] & FG
             docker_compose("up", "-d", "--wait")
 
+            # Restart nginx so it picks up the new container IPs for web-ui and web-api
+            docker_compose("restart", "frontend")
+
             update_cmd = "invenio alembic upgrade heads && invenio collect -v"
             docker_compose("exec", "worker", "bash", "-c", update_cmd)
 
