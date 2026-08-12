@@ -96,7 +96,7 @@ def rollback(version: str = typer.Option(None, help="Specific tag to rollback to
     try:
         with local.cwd(REPO_DIR):
             docker_compose("down")
-            docker_compose("build", "--no-cache")
+            docker_compose("build")
             docker_compose("up", "-d")
     finally:
         if current_branch:
@@ -140,7 +140,6 @@ def prod_deploy():
                 "build",
                 "-t",
                 config.docker_image_name,
-                "--no-cache",
                 "--build-arg",
                 "INSTALL_LOCAL_WHEELS=false",
                 ".",
@@ -183,7 +182,6 @@ def prod_update(
                     "build",
                     "-t",
                     config.docker_image_name,
-                    "--no-cache",
                     "--build-arg",
                     "INSTALL_LOCAL_WHEELS=false",
                     ".",
