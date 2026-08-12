@@ -134,17 +134,16 @@ def prod_deploy():
     git["switch", "prod"] & FG
     git["pull", "origin", "prod"] & FG
 
-    with local.env(INVENIO_THEME_IFORM_PRODUCTION="true"):
-        with local.cwd(REPO_DIR):
-            docker[
-                "build",
-                "-t",
-                config.docker_image_name,
-                "--build-arg",
-                "INSTALL_LOCAL_WHEELS=false",
-                ".",
-            ] & FG
-            docker_compose("up", "-d", "--wait")
+    with local.env(INVENIO_THEME_IFORM_PRODUCTION="true"), local.cwd(REPO_DIR):
+        docker[
+            "build",
+            "-t",
+            config.docker_image_name,
+            "--build-arg",
+            "INSTALL_LOCAL_WHEELS=false",
+            ".",
+        ] & FG
+        docker_compose("up", "-d", "--wait")
 
         setup_cmd = "invenio db init && invenio db create && invenio alembic upgrade head && invenio collect -v && invenio index init"
         docker_compose("exec", "worker", "bash", "-c", setup_cmd)
@@ -175,18 +174,17 @@ def prod_update(
 
         git["switch", "prod"] & FG
         git["pull", "origin", "prod"] & FG
-        with local.env(INVENIO_THEME_IFORM_PRODUCTION="true"):
-            with local.cwd(REPO_DIR):
-                docker_compose("pull")
-                docker[
-                    "build",
-                    "-t",
-                    config.docker_image_name,
-                    "--build-arg",
-                    "INSTALL_LOCAL_WHEELS=false",
-                    ".",
-                ] & FG
-                docker_compose("up", "-d", "--wait")
+        with local.env(INVENIO_THEME_IFORM_PRODUCTION="true"), local.cwd(REPO_DIR):
+            docker_compose("pull")
+            docker[
+                "build",
+                "-t",
+                config.docker_image_name,
+                "--build-arg",
+                "INSTALL_LOCAL_WHEELS=false",
+                ".",
+            ] & FG
+            docker_compose("up", "-d", "--wait")
 
             update_cmd = "invenio alembic upgrade head && invenio collect -v"
             docker_compose("exec", "worker", "bash", "-c", update_cmd)
