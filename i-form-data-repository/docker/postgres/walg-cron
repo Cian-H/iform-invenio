@@ -1,0 +1,1 @@
+0 2 * * * postgres /usr/local/bin/wal-g backup-push /var/lib/postgresql/data > /proc/1/fd/1 2>&1

@@ -60,19 +60,18 @@ services:
     ports:
       - "${DOCKER_SERVICES_IP_BIND:-127.0.0.1}:6379:6379"
   db:
-    image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.11-0
+    build: ./docker/postgres
     restart: "unless-stopped"
     environment:
       - "POSTGRES_USER=${POSTGRES_USER:-i-form-data-repository}"
       - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-i-form-data-repository}"
       - "POSTGRES_DB=${POSTGRES_DB:-i-form-data-repository}"
-      - "PGBACKREST_REPO1_TYPE=s3"
-      - "PGBACKREST_REPO1_S3_BUCKET=${INVENIO_S3_BUCKET_NAME}"
-      - "PGBACKREST_REPO1_S3_ENDPOINT=${INVENIO_S3_ENDPOINT_URL}"
-      - "PGBACKREST_REPO1_S3_KEY=${INVENIO_S3_ACCESS_KEY_ID}"
-      - "PGBACKREST_REPO1_S3_KEY_SECRET=${INVENIO_S3_SECRET_ACCESS_KEY}"
-      - "PGBACKREST_REPO1_S3_REGION=${INVENIO_S3_REGION_NAME}"
-      - "PGBACKREST_REPO1_PATH=/backup/meta_db"
+      - "WALG_S3_PREFIX=s3://${INVENIO_S3_BUCKET_NAME}/walg"
+      - "AWS_ACCESS_KEY_ID=${INVENIO_S3_ACCESS_KEY_ID}"
+      - "AWS_SECRET_ACCESS_KEY=${INVENIO_S3_SECRET_ACCESS_KEY}"
+      - "AWS_ENDPOINT=${INVENIO_S3_ENDPOINT_URL}"
+      - "AWS_REGION=${INVENIO_S3_REGION_NAME}"
+      - "AWS_S3_FORCE_PATH_STYLE=true"
     ports:
       - "${DOCKER_SERVICES_IP_BIND:-127.0.0.1}:5432:5432"
     logging:
