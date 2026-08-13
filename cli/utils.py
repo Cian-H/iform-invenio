@@ -60,7 +60,6 @@ _deploy_env_vars = None
 def docker_compose(*args):
     global _deploy_env_vars
     import typer
-    from plumbum import local
     from plumbum.cmd import docker
 
     from cli.config import config
@@ -95,5 +94,5 @@ def docker_compose(*args):
     compose = docker[
         "compose", "-f", config.docker_compose_file, "--env-file", str(env_file)
     ]
-    with local.env(**_deploy_env_vars):
-        return compose[*args]
+
+    return compose[*args].with_env(**_deploy_env_vars)
