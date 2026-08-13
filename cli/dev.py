@@ -96,20 +96,34 @@ def test_local():
     repo_dir = get_repo_dir()
 
     with local.cwd(repo_dir):
-        docker_compose("down")
-        docker(
+        from plumbum import FG
+
+        docker_compose("down") & FG
+        docker[
             "build",
             "-t",
             config.docker_image_name,
+            "--network",
+            "host",
             "--no-cache",
             "--build-arg",
             "INSTALL_LOCAL_WHEELS=true",
             ".",
-        )
-        docker_compose("up", "-d", "--wait")
+        ] & FG
+        docker_compose("up", "-d", "--wait") & FG
 
-        setup_cmd = "invenio db init || true; invenio db create || true; invenio alembic upgrade || true; invenio index init || true"
-        docker_compose("exec", "worker", "bash", "-c", setup_cmd)
+        setup_cmd = "invenio db init || true; invenio db create || true; invenio alembic upgrade || true; invenio index init || true; invenio roles create iform_authenticated -d 'Allows uploading research data' || true"
+        docker_compose("exec", "worker", "bash", "-c", setup_cmd) & FG
+
+        logger.info(
+            "Running webpack buildall inside web-ui to update persistent static volume..."
+        )
+        docker_compose(
+            "exec", "web-ui", "bash", "-c", "uv run invenio webpack buildall"
+        ) & FG
+
+        logger.info("Restarting frontend proxy to pick up new container IPs...")
+        docker_compose("restart", "frontend") & FG
 
     try:
         curl("-skI", "https://127.0.0.1:8443/")

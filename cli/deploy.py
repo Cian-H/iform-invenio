@@ -151,7 +151,7 @@ def prod_deploy():
         ] & FG
         docker_compose("up", "-d", "--wait")
 
-        setup_cmd = "invenio db init && invenio db create && invenio alembic upgrade heads && invenio collect -v && invenio index init"
+        setup_cmd = "invenio db init && invenio db create && invenio alembic upgrade heads && (invenio roles create iform_authenticated -d 'Allows uploading research data' || true) && invenio collect -v && invenio index init"
         docker_compose("exec", "worker", "bash", "-c", setup_cmd)
 
     logger.success("Production deployment complete!")
@@ -195,7 +195,7 @@ def prod_update(
             # Restart nginx so it picks up the new container IPs for web-ui and web-api
             docker_compose("restart", "frontend")
 
-            update_cmd = "invenio alembic upgrade heads && invenio collect -v"
+            update_cmd = "invenio alembic upgrade heads && (invenio roles create iform_authenticated -d 'Allows uploading research data' || true) && invenio collect -v"
             docker_compose("exec", "worker", "bash", "-c", update_cmd)
 
         try:

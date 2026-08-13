@@ -74,10 +74,26 @@ def docker_compose(*args):
         raise typer.Exit(1)
 
     if _deploy_env_vars is None:
-        _deploy_env_vars = get_dynamic_s3_credentials()
+        use_s3 = True
+        with open(env_file) as f:
+            for line in f:
+                if line.startswith("INVENIO_USE_S3"):
+                    val = line.split("=")[1].strip().lower()
+                    use_s3 = val == "true"
+
+        if use_s3:
+            _deploy_env_vars = get_dynamic_s3_credentials()
+        else:
+            logger.info(
+                "INVENIO_USE_S3 is false. Using dummy S3 credentials to prevent production database corruption."
+            )
+            _deploy_env_vars = {
+                "INVENIO_S3_ACCESS_KEY_ID": "CHANGE_ME",
+                "INVENIO_S3_SECRET_ACCESS_KEY": "CHANGE_ME",
+            }
 
     compose = docker[
         "compose", "-f", config.docker_compose_file, "--env-file", str(env_file)
     ]
     with local.env(**_deploy_env_vars):
-        return compose(*args)
+        return compose[*args]
