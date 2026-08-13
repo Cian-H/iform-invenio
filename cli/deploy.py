@@ -57,7 +57,7 @@ def tag_version():
     logger.info(f"Current tag is {current_tag}")
 
     with local.cwd(REPO_DIR):
-        images_output = docker_compose("images")
+        images_output = docker_compose("images")()
 
     version_file = VERSIONS_DIR / f"{current_tag}.txt"
 
