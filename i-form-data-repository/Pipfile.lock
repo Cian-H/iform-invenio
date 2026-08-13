@@ -1963,13 +1963,12 @@
         },
         "invenio-theme-iform": {
             "hashes": [
-                "sha256:9b821d9e68ffd64a76043bc4c79360f6f56405cb0302dca7727e0331835e19d9",
-                "sha256:f793d622a13a7f29c82e41bda70a7587251050b2f5d7916b31ee4111f35d34a5",
-                "sha256:f7c7cd74e43cc1f4cfabba9973ccc8d781fa3d8a8092c3b7294230dd5d39db0e"
+                "sha256:34e6a11a7e6d0669b11c11e2222df014eec429dc2a5adcbf3347effbd6182447",
+                "sha256:47f05b907fa1d281eebe899920601370f0f151581136dad9840f62c5c58848ff"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.10' and python_version < '3.14'",
-            "version": "==2026.8.12"
+            "version": "==2026.8.13"
         },
         "invenio-userprofiles": {
             "hashes": [
