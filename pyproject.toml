@@ -39,7 +39,7 @@ ignore = ["BLE001", "B008", "S110", "C408"]
 packages = ["cli"]
 
 [tool.bumpver]
-current_version = "2026.8.1"
+current_version = "2026.8.2"
 version_pattern = "YYYY.MM.INC0"
 commit_message = "bump version {old_version} -> {new_version}"
 commit = true
