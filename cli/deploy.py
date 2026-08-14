@@ -57,14 +57,37 @@ def tag_version():
     logger.info(f"Current tag is {current_tag}")
 
     with local.cwd(REPO_DIR):
-        images_output = docker_compose("images")()
+        try:
+            images_output = docker_compose("images")()
+            lines_to_write = [
+                line for line in images_output.splitlines() if "REPOSITORY" not in line
+            ]
+        except Exception as e:
+            logger.warning(f"docker-compose images failed: {e}")
+            logger.info("Extracting images directly from docker-services.yml")
+            try:
+                import yaml
+
+                with open("docker-services.yml", "r") as f:
+                    services_data = yaml.safe_load(f).get("services", {})
+
+                lines_to_write = []
+                for srv_data in services_data.values():
+                    image = srv_data.get("image")
+                    if image:
+                        parts = image.rsplit(":", 1)
+                        if len(parts) == 2 and "/" not in parts[1]:
+                            lines_to_write.append(f"{parts[0]} {parts[1]}")
+                        else:
+                            lines_to_write.append(f"{image} latest")
+            except Exception as e2:
+                logger.warning(f"Failed to parse docker-services.yml: {e2}")
+                lines_to_write = []
 
     version_file = VERSIONS_DIR / f"{current_tag}.txt"
 
     with open(version_file, "w") as f:
-        for line in images_output.splitlines():
-            if "REPOSITORY" not in line:
-                f.write(line + "\n")
+        f.writelines(line + "\n" for line in lines_to_write)
 
     logger.success(f"Saved image states to {version_file}")
 
