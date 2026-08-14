@@ -11,14 +11,11 @@
 FROM registry.cern.ch/inveniosoftware/almalinux:1
 
 ENV UV_PYTHON=3.12
-ENV PIPENV_VENV_IN_PROJECT=1
 
 COPY site ./site
-COPY Pipfile Pipfile.lock ./
+COPY pyproject.toml uv.lock ./
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
-RUN uv python install ${UV_PYTHON} && \
-    pipenv install --deploy --python $(uv python find ${UV_PYTHON}) && \
-    pipenv run pip install "setuptools<70.0.0"
+RUN uv sync --frozen
 
 COPY ./docker/uwsgi/ ${INVENIO_INSTANCE_PATH}
 COPY ./invenio.cfg ${INVENIO_INSTANCE_PATH}
@@ -34,7 +31,7 @@ ARG INSTALL_LOCAL_WHEELS=false
 COPY ./local_wheels/ ./local_wheels/
 RUN if [ "$INSTALL_LOCAL_WHEELS" = "true" ]; then \
         if ls ./local_wheels/invenio_theme_iform*.whl ./local_wheels/invenio_config_iform*.whl 1> /dev/null 2>&1; then \
-            pipenv run pip install --no-deps --force-reinstall ./local_wheels/invenio_theme_iform*.whl ./local_wheels/invenio_config_iform*.whl; \
+            uv pip install --no-deps --reinstall ./local_wheels/invenio_theme_iform*.whl ./local_wheels/invenio_config_iform*.whl; \
         fi \
     fi
 
